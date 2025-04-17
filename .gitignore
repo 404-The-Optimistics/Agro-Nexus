@@ -3,6 +3,7 @@ tf-env/
 tf-env310/
 myenv/
 venv/
+env
 
 # Ignore .env file (if using it for sensitive data)
 .env
