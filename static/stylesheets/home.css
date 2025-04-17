@@ -1,0 +1,468 @@
+  /* Base styles */
+:root {
+  /* Theme colors */
+  --white: #ffffff;
+  --sage: #B2AC88;
+  --sage-light: #C5C1A9;
+  --sage-dark: #9A9575;
+  --olive: #6A762A;
+  --olive-light: #7A8834;
+  --olive-dark: #586223;
+  
+  /* Other UI colors */
+  --text-dark: #333333;
+  --border-color: rgba(178, 172, 136, 0.2);
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --chart-bg: rgba(255, 255, 255, 0.8);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* body {
+  background: linear-gradient(to bottom right, #ffffff, rgba(178, 172, 136, 0.1));
+  color: var(--text-dark);
+  min-height: 100vh;
+} */
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Header styles */
+.farm-header {
+  position: relative;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(to right, var(--olive), var(--sage-dark), var(--sage));
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.farm-logo {
+  font-size: 1.875rem;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  margin-left: 0.75rem;
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+  color: white;
+}
+
+/* Cloud animation */
+.clouds {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 8rem;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.cloud {
+  position: absolute;
+  top: 20px;
+  opacity: 0.7;
+  background-color: #ffffff;
+  border-radius: 50%;
+}
+
+/* Layout styles */
+.main-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  position: relative;
+  z-index: 10;
+}
+
+.content-column {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Card styles */
+.farm-tools-card {
+  background-color: var(--card-bg);
+  backdrop-filter: blur(8px);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+  transition: all 0.3s;
+}
+
+.farm-tools-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+}
+
+.card-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--olive);
+  margin-bottom: 0.5rem;
+}
+
+.card-header p {
+  color: var(--sage-dark);
+  margin-bottom: 1rem;
+}
+
+.card-content {
+  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .card-content {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Button styles */
+.tool-button {
+  width: 100%;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(to right, var(--sage), var(--sage-light));
+  color: white;
+  border-radius: 0.5rem;
+  border: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tool-button:hover {
+  background: linear-gradient(to right, var(--olive), var(--olive-light));
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.tool-button .icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.tool-button span {
+  font-weight: 500;
+}
+
+/* Statistics section */
+.statistics-section {
+  background-color: var(--card-bg);
+  backdrop-filter: blur(8px);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  transition: all 0.3s;
+  margin-top:100px;
+}
+
+.statistics-section:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.statistics-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--olive);
+  margin-bottom: 0.5rem;
+}
+
+.statistics-section p {
+  color: var(--sage-dark);
+  margin-bottom: 1.5rem;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .charts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .charts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.chart-box {
+  background-color: var(--chart-bg);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s;
+  height: 300px;
+  position: relative;
+}
+
+.chart-box canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-box h3 {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: var(--sage-dark);
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 1;
+}
+
+.chart-box:hover {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Animation classes */
+@keyframes float-cloud {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.float-slow {
+  animation: float-cloud 120s linear infinite;
+}
+
+.float-medium {
+  animation: float-cloud 80s linear infinite;
+}
+
+.float-fast {
+  animation: float-cloud 60s linear infinite;
+}
+
+
+/* Enhanced Footer Section */
+.footer {
+  padding: 60px 0 30px;
+  /* background-color: var(--olive); */
+  background: linear-gradient(to right, #5d6e49, #28331a);
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+  margin-top:250px;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--sage), var(--white), var(--sage));
+  animation: shimmer 3s infinite linear;
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 0%;
+  }
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+}
+
+.footer-info h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.footer-info h3::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background-color: var(--sage);
+}
+
+.footer-info p {
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+  max-width: 350px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-icon {
+  color:#FFD700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition-bounce);
+  position: relative;
+  overflow: hidden;
+}
+
+.social-icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: scale(0);
+  transition: var(--transition);
+}
+
+.social-icon:hover {
+  transform: translateY(-5px);
+  border-color: var(--sage);
+}
+
+.social-icon:hover::before {
+  transform: scale(1);
+}
+
+.footer-links h4, .footer-contact h4 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.footer-links h4::after, .footer-contact h4::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background-color: var(--sage);
+}
+
+.footer-links ul, .footer-contact ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.footer-links a {
+  color:#FFD700;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: var(--transition);
+  position: relative;
+  padding-left: 15px;
+}
+
+.footer-links a::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: var(--transition);
+}
+
+.footer-links a:hover {
+  opacity: 1;
+  padding-left: 20px;
+}
+
+.footer-links a:hover::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.footer-contact li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  opacity: 0.8;
+  transition: var(--transition);
+}
+
+.footer-contact li:hover {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+.footer-contact svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-top: 3px;
+  transition: var(--transition);
+}
+
+.footer-contact li:hover svg {
+  color: var(--sage);
+  transform: scale(1.1);
+}
+
+.copyright {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  opacity: 0.7;
+}

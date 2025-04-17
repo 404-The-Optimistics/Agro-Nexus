@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgroNexus</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/home.css') }}">
+  <link rel="stylesheet" href="/static/components/homeAnimation.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/voice_guidelines.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .navbar {
+      background: linear-gradient(to right, #5d6e49, #28331a);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 28px;
+      height: 90px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .navbar .logo {
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      margin-left: 40px;
+    }
+
+    .navbar .nav-links {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      transition: color 0.3s;
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+
+    .navbar .nav-links a:hover {
+      color: #E8F0E3;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: 30px;
+      padding: 8px 16px;
+      border-left: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .user-profile .avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4A5D32;
+      font-weight: bold;
+    }
+
+    .user-profile .user-info {
+      color: white;
+      font-size: 14px;
+    }
+
+    .hero-slider {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
+    }
+    
+    .hero-slides {
+      width: 100%;
+      display: flex;
+      position: relative;
+    }
+    
+    .hero-slide {
+      display: none;
+      width: 100%;
+    }
+    
+    .hero-slide img {
+      width: 100%;
+      height: 700px;
+      object-fit: cover;
+    }
+    
+    /* Navigation arrows */
+    .prev, .next {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      width: auto;
+      margin-top: -22px;
+      padding: 16px;
+      color: white;
+      font-weight: bold;
+      font-size: 24px;
+      transition: 0.6s ease;
+      border-radius: 0 3px 3px 0;
+      user-select: none;
+      background-color: rgba(0,0,0,0.3);
+    }
+    
+    .next {
+      right: 0;
+      border-radius: 3px 0 0 3px;
+    }
+    
+    .prev {
+      left: 0;
+      border-radius: 0 3px 3px 0;
+    }
+    
+    .prev:hover, .next:hover {
+      background-color: rgba(0,0,0,0.8);
+    }
+    
+    /* Fade animation */
+    .fade {
+      animation-name: fade;
+      animation-duration: 1.5s;
+    }
+    
+    @keyframes fade {
+      from {opacity: 0.4} 
+      to {opacity: 1}
+    }
+    
+    /* Slide Caption Styles */
+    .hero-caption {
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+      text-align: left;
+      color: white;
+      z-index: 1;
+    }
+    
+    .hero-caption-inner {
+      background-color: rgba(18, 57, 12, 0.8);
+      padding: 25px 35px;
+      border-radius: 8px;
+      max-width: 600px;
+      margin-left: 50px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      border-left: 6px solid #5d6e49;
+    }
+    
+    .hero-caption-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .hero-caption-title .icon {
+      font-size: 32px;
+      color: #E8F0E3;
+    }
+    
+    .hero-caption-desc {
+      font-size: 18px;
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+    
+    /* Preloader Styles */
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgb(18, 57, 12);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.8s ease;
+      overflow: hidden;
+    }
+    
+    body.preloading {
+      overflow: hidden;
+      height: 100vh;
+    }
+    
+    .preloader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-width: 1200px;
+      padding: 20px;
+    }
+    
+    .preloader img, .preloader-svg {
+      max-width: 800px;
+      width: 100%;
+      height: auto;
+      transform: scale(1.5);
+      display: block;
+      margin: 0 auto;
+    }
+    
+    .preloader-text {
+      color: white;
+      font-size: 28px;
+      margin-top: 30px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      position: relative;
+      text-align: center;
+    }
+    
+    /* Slide Indicator Styles */
+    .slide-indicators {
+      text-align: center;
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      z-index: 2;
+    }
+    
+    .dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      margin: 0 5px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .active-dot {
+      background-color: white;
+      width: 16px;
+      height: 16px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-content">
+      <object type="image/svg+xml" data="{{ url_for('static', filename='images/preloader.svg') }}" class="preloader-svg">
+        Your browser does not support SVG
+      </object>
+      <div class="preloader-text">Loading AgroNexus</div>
+    </div>
+  </div>
+
+  <div id="clouds" class="clouds"></div>
+
+  <div class="navbar">
+    <a href="#" class="logo">AgroNexus</a>
+    <div class="nav-links">
+      <a href="/predict_price">Crop Price Predictor</a>
+      <a href="/crop_rec">Crop Recommendation</a>
+      <a href="/submit">Disease Detection</a>
+      <a href="/height">Height Tracker</a>
+      <a href="/irrigation">Irrigation Predictor</a>
+      <a href="/problemsSolved">Problems Solved</a>
+      <div class="user-profile">
+        <div class="avatar">U</div>
+        <!-- <div class="user-info">User Profile</div> -->
+        <a href="#">User Profile</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Image Slider -->
+  <div class="hero-slider">
+    <div class="hero-slides">
+      <div class="hero-slide fade">
+        <img src="{{ url_for('static', filename='images/slider1.png') }}" alt="Crop Price Prediction">
+        <div class="hero-caption">
+          <div class="hero-caption-inner">
+            <div class="hero-caption-title">
+              <span class="icon">💰</span> Crop Price Prediction
+            </div>
+            <div class="hero-caption-desc">
+              Get accurate price forecasts for your crops based on market trends and historical data.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-slide fade">
+        <img src="{{ url_for('static', filename='images/try2.png') }}" alt="Crop Recommendation">
+        <div class="hero-caption">
+          <div class="hero-caption-inner">
+            <div class="hero-caption-title">
+              <span class="icon">🌱</span> Crop Recommendation
+            </div>
+            <div class="hero-caption-desc">
+              Discover the best crops to plant based on your soil conditions, climate, and location.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-slide fade">
+        <img src="{{ url_for('static', filename='images/tracker.png') }}" alt="Disease Detection">
+        <div class="hero-caption">
+          <div class="hero-caption-inner">
+            <div class="hero-caption-title">
+              <span class="icon">🔍</span> Disease Detection
+            </div>
+            <div class="hero-caption-desc">
+              Identify plant diseases early with our AI-powered image recognition technology.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-slide fade">
+        <img src="{{ url_for('static', filename='images/slider1.png') }}" alt="Height Tracker">
+        <div class="hero-caption">
+          <div class="hero-caption-inner">
+            <div class="hero-caption-title">
+              <span class="icon">📏</span> Height Tracker
+            </div>
+            <div class="hero-caption-desc">
+              Monitor and track your crop growth stages to optimize harvesting time and yield.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-slide fade">
+        <img src="{{ url_for('static', filename='images/try2.png') }}" alt="Weather Forecasting">
+        <div class="hero-caption">
+          <div class="hero-caption-inner">
+            <div class="hero-caption-title">
+              <span class="icon">☁️</span> Weather Forecasting
+            </div>
+            <div class="hero-caption-desc">
+              Get real-time weather updates and forecasts to plan your farming activities effectively.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Left and right arrow buttons -->
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    
+    <!-- Slide indicators (dots) -->
+    <div class="slide-indicators">
+      <span class="dot" onclick="currentSlide(1)"></span>
+      <span class="dot" onclick="currentSlide(2)"></span>
+      <span class="dot" onclick="currentSlide(3)"></span>
+      <span class="dot" onclick="currentSlide(4)"></span>
+      <span class="dot" onclick="currentSlide(5)"></span>
+    </div>
+  </div>
+
+  <main>
+    <div class="mic-section" style="display: flex; justify-content: center; margin: 20px 0;">
+      <button id="micButton" style="
+        background: linear-gradient(to right, #5d6e49, #28331a); 
+        color: white; 
+        border: none; 
+        padding: 12px 24px; 
+        border-radius: 50px; 
+        font-size: 16px; 
+        font-weight: bold; 
+        cursor: pointer; 
+        box-shadow: 0 4px 15px #4b4b4b; 
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top:10px;
+        margin-bottom: 50px;">
+        <span style="font-size: 22px;">🎤</span> Speak to Navigate
+      </button>
+    </div>
+    
+    <!-- Voice Guidelines Component -->
+    <div class="voice-guidelines">
+      <h3>🎤 Voice Commands</h3>
+      <ul class="command-list">
+        <li class="command-item">
+          <div class="command-text">"Mujhe meri kheti ka daam janna hai"</div>
+          <div class="command-description">💰 Check crop prices and market trends</div>
+        </li>
+        <li class="command-item">
+          <div class="command-text">"Mujhe fasal ka sujaav chahiye"</div>
+          <div class="command-description">🌱 Get personalized crop recommendations</div>
+        </li>
+        <li class="command-item">
+          <div class="command-text">"Mujhe fasal ki beemari jaanni hai"</div>
+          <div class="command-description">🔍 Detect and identify crop diseases</div>
+        </li>
+        <li class="command-item">
+          <div class="command-text">"Mujhe fasal ki uchai jaani hai"</div>
+          <div class="command-description">📏 Track and monitor crop growth</div>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="main-container">
+      <div class="content-column">
+        <div class="farm-tools-card">
+          <div class="card-header">
+            <h2>Farm Management Tools</h2>
+            <p>Access powerful tools to optimize your farm operations</p>
+          </div>
+          <div class="card-content">
+            <a href="/predict_price"><button class="tool-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                  <polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+                <span>Crop Price Predictor</span>
+              </button></a>
+            <a href="/crop_rec"><button class="tool-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                  <path d="M7 20.59V7a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v13.59"></path>
+                  <path d="M2 20h20"></path>
+                  <path d="M12 10.5V17"></path>
+                  <path d="M10 13h4"></path>
+                </svg>
+                <span>Crop Recommendation</span>
+              </button></a>
+            <a href="/submit"><button class="tool-button">   <!-- changed /disease_detec to /submit -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                  <path d="m18 5-3-3H7L4 5"></path>
+                  <path d="M18 5v14l-3 3H7l-3-3V5"></path>
+                  <path d="M11.5 19a.5.5 0 0 0-.5.5"></path>
+                  <path d="M11.5 5a.5.5 0 0 1-.5-.5"></path>
+                  <path d="M11.5 7a.5.5 0 0 1-.5.5"></path>
+                  <path d="M11.5 9a.5.5 0 0 0-.5.5"></path>
+                  <path d="M11.5 11a.5.5 0 0 1-.5.5"></path>
+                  <path d="M11.5 13a.5.5 0 0 0-.5.5"></path>
+                  <path d="M11.5 15a.5.5 0 0 1-.5.5"></path>
+                  <path d="M11.5 17a.5.5 0 0 0-.5.5"></path>
+                </svg>
+                <span>Disease Detection</span>
+              </button></a>
+            <a href="/height"><button class="tool-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                </svg>
+                <span>Height Tracker</span>
+              </button></a>
+          </div>
+        </div>
+
+        <div class="statistics-section">
+          <h2>Today's Statistics</h2>
+          <p>Weather data for the last 5 days</p>
+          <div class="charts-grid">
+            <div class="chart-box">
+              <h3>Temperature (Last 5 Days)</h3>
+              <canvas id="tempChart"></canvas>
+            </div>
+            <div class="chart-box">
+              <h3>Humidity (Last 5 Days)</h3>
+              <canvas id="humidityChart"></canvas>
+            </div>
+            <div class="chart-box">
+              <h3>Rainfall (Last 5 Days)</h3>
+              <canvas id="rainChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-info">
+          <h3>Kisan Smart Kheti Guide</h3>
+          <p>Empowering Indian farmers with technology and innovative solutions to increase productivity, sustainability, and income.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+            </a>
+            <a href="#" class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
+              </svg>
+            </a>
+            <a href="#" class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="problems.html">Solutions</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-contact">
+          <h4>Contact Us</h4>
+          <ul>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>Agricultural Technology Center, Krishi Bhavan, New Delhi - 110001</span>
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              <span>+91 1800-XXX-XXXX (Toll Free)</span>
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>support@kisansmartkheti.org</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; <span id="current-year"></span> Kisan Smart Kheti Guide. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  <script src="{{ url_for('static', filename='components/homeGraphs.js') }}"></script>
+  <script type="module" src="/static/components/homeAnimation.js"></script>
+  <script src="/static/components/mic.js"></script>
+  
+  <!-- Main Initialization -->
+  <!-- Main Initialization -->
+<script>
+  // Main initialization function
+  function initializeApp() {
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // 🔊 Auto play welcome audio
+    const welcomeAudio = new Audio('/static/images/welcome.mp3'); // Change path if needed
+    welcomeAudio.play().catch(err => {
+      console.warn("Autoplay failed (likely due to browser restrictions).", err);
+    });
+  }
+
+  // Initialize everything when DOM is ready
+  document.addEventListener('DOMContentLoaded', function () {
+    initializeApp();
+  });
+</script>
+
+  
+  <!-- Hero Slider Script -->
+  <script>
+    let slideIndex = 0;
+    
+    // Only start the slideshow when page is fully loaded
+    window.addEventListener('load', function() {
+      showSlides();
+    });
+    
+    // Next/previous controls
+    function plusSlides(n) {
+      showSlides(slideIndex += n);
+    }
+    
+    // Thumbnail image controls
+    function currentSlide(n) {
+      showSlides(slideIndex = n);
+    }
+    
+    function showSlides(n) {
+      let i;
+      let slides = document.getElementsByClassName("hero-slide");
+      let dots = document.getElementsByClassName("dot");
+      
+      if (n != undefined) {
+        slideIndex = n;
+        if (slideIndex > slides.length) {slideIndex = 1}
+        if (slideIndex < 1) {slideIndex = slides.length}
+        
+        for (i = 0; i < slides.length; i++) {
+          slides[i].style.display = "none";
+        }
+        
+        for (i = 0; i < dots.length; i++) {
+          dots[i].className = dots[i].className.replace(" active-dot", "");
+        }
+        
+        slides[slideIndex-1].style.display = "block";
+        dots[slideIndex-1].className += " active-dot";
+        return;
+      }
+      
+      for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+      }
+      
+      for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active-dot", "");
+      }
+      
+      slideIndex++;
+      if (slideIndex > slides.length) {
+        slideIndex = 1;
+      }
+      
+      slides[slideIndex-1].style.display = "block";
+      dots[slideIndex-1].className += " active-dot";
+      setTimeout(showSlides, 5000); // Change image every 5 seconds
+    }
+  </script>
+
+  <!-- Preloader Script -->
+  <script>
+    // Set initial state for page elements
+    document.addEventListener("DOMContentLoaded", function() {
+      // Add preloading class to body
+      document.body.classList.add('preloading');
+      
+      // Show preloader
+      const preloader = document.getElementById('preloader');
+      preloader.style.display = 'flex';
+      
+      // Set initial position for the preloader text to prevent translation during load
+      const preloaderText = document.querySelector('.preloader-text');
+      if (preloaderText) {
+        preloaderText.style.opacity = '1';
+        preloaderText.style.transform = 'translateY(0)';
+      }
+      
+      // Force SVG animation to work by properly loading it
+      const svgObject = document.querySelector('.preloader-svg');
+      if (svgObject) {
+        // No need to reload - this can cause flickering
+        // Just ensure it's visible and properly sized
+        svgObject.style.display = 'block';
+      }
+      
+      // Ensure minimum display time of 1 second
+      const startTime = new Date().getTime();
+      const minDisplayTime = 1000; // 1 second
+      
+      // Hide preloader when page is fully loaded, but ensure minimum display time
+      window.addEventListener('load', function() {
+        const currentTime = new Date().getTime();
+        const elapsedTime = currentTime - startTime;
+        const remainingTime = Math.max(0, minDisplayTime - elapsedTime);
+        
+        setTimeout(function() {
+          preloader.style.opacity = '0';
+          setTimeout(function() {
+            preloader.style.display = 'none';
+            // Remove preloading class from body
+            document.body.classList.remove('preloading');
+          }, 800);
+        }, remainingTime);
+      });
+    });
+  </script>
+
+  <!-- <script src="{{ url_for('static', filename='scripts/home.js') }}"></script> -->
+</body>
+
+</html>

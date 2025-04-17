@@ -1,0 +1,8 @@
+# Ignore virtual environments
+tf-env/
+tf-env310/
+myenv/
+venv/
+
+# Ignore .env file (if using it for sensitive data)
+.env

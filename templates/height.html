@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/height.css') }}">
+
+</head>
+<body>
+    <div class="navbar">
+        <a href="#" class="logo">AgroNexus</a>
+        <div class="nav-links">
+          <a href="/predict_price">Crop Price Predictor</a>
+          <a href="/crop_rec">Crop Recommendation</a>
+          <a href="/submit">Disease Detection</a>
+          <a href="/height">Height Tracker</a>
+          <a href="/irrigation">Irrigation Predictor</a>
+          <a href="/problems_solved">Problems Solved</a>
+        </div>
+      </div>
+    <div class="clouds"></div>
+    
+    <h2>Upload a leaf image to track height</h2>
+    
+    <form method="POST" enctype="multipart/form-data" action="/height">
+        <input type="file" name="image" accept="image/*" required>
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if height %}
+    <div class="result-container">
+        <h3>Prediction: {{height}}</h3>
+        <img src="{{image}}" alt="Uploaded leaf image">
+    </div>
+    {% endif %}
+</body>
+</html>

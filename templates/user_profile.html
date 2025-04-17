@@ -1,0 +1,2139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile - AgroNexus</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --white: #ffffff;
+      --sage: #b2ac88;
+      --sage-light: #c5c1a9;
+      --sage-dark: #9a9575;
+      --olive: #6a762a;
+      --olive-light: #7a8834;
+      --olive-dark: #586223;
+      --text-dark: #333333;
+      --border-color: rgba(178, 172, 136, 0.2);
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --chart-bg: rgba(255, 255, 255, 0.85);
+      --accent-color: #8E54E9;
+      --accent-gradient: linear-gradient(135deg, #4776E6, #8E54E9);
+      --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      --hover-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      --transition-standard: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+
+    body {
+      background-attachment: fixed;
+      background-size: cover;
+      color: var(--text-dark);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(178, 172, 136, 0.1), rgba(106, 118, 42, 0.2));
+      z-index: -1;
+    }
+
+    .navbar {
+      background: linear-gradient(to right, #5d6e49, #28331a);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 28px;
+      height: 90px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar .logo {
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      margin-left: 40px;
+      position: relative;
+    }
+    
+    .navbar .logo::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--accent-color);
+      border-radius: 50%;
+      bottom: 8px;
+      right: -12px;
+    }
+
+    .navbar .nav-links {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .navbar .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      transition: all 0.3s;
+      padding: 8px 12px;
+      border-radius: 6px;
+      position: relative;
+    }
+
+    .navbar .nav-links a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 50%;
+      background: var(--accent-gradient);
+      transition: all 0.3s;
+      transform: translateX(-50%);
+    }
+
+    .navbar .nav-links a:hover::after {
+      width: 80%;
+    }
+
+    .navbar .nav-links a:hover {
+      color: #E8F0E3;
+      background-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .navbar .nav-links a.active::after {
+      width: 80%;
+    }
+
+    .hamburger-menu {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    
+    .hamburger-menu span {
+      width: 100%;
+      height: 3px;
+      background-color: white;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+    
+    .main-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 110px auto 0;
+      padding: 2rem 1rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-title h1 {
+      font-size: 2.5rem;
+      color: var(--olive-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-title p {
+      color: var(--sage-dark);
+      font-size: 1.1rem;
+    }
+
+    /* Profile Dashboard Styles */
+    .profile-dashboard {
+      display: grid;
+      grid-template-columns: 1fr 3fr;
+      gap: 2rem;
+    }
+
+    .profile-sidebar {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      padding: 2rem;
+      height: fit-content;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .user-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage), var(--olive));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--olive-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .user-email {
+      color: var(--sage-dark);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .user-location {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--sage-dark);
+      font-size: 0.9rem;
+    }
+
+    .coins-section {
+      background: linear-gradient(to right, var(--sage), var(--olive));
+      padding: 1.5rem;
+      border-radius: 10px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .coins-section::before {
+      content: "";
+      position: absolute;
+      top: -15px;
+      right: -15px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .coins-title {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .coins-amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .coins-icon {
+      font-size: 2rem;
+    }
+
+    .redeem-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+
+    .redeem-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .profile-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .profile-nav-item {
+      padding: 1rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: var(--text-dark);
+      transition: var(--transition-standard);
+    }
+
+    .profile-nav-item:hover,
+    .profile-nav-item.active {
+      background: rgba(178, 172, 136, 0.1);
+    }
+
+    .profile-nav-item.active {
+      border-left: 3px solid var(--olive);
+    }
+
+    .profile-nav-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--olive);
+    }
+
+    .profile-content {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      padding: 2rem;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .tab-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-header h2 {
+      font-size: 1.5rem;
+      color: var(--olive-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .tab-header p {
+      color: var(--sage-dark);
+    }
+
+    /* Dashboard tab styles */
+    .usage-stats {
+      background-color: var(--white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+
+    .stats-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .stats-header h3 {
+      font-size: 1.2rem;
+      color: var(--olive-dark);
+    }
+
+    .time-filter {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .time-btn {
+      background: none;
+      border: 1px solid var(--sage);
+      color: var(--sage-dark);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+
+    .time-btn.active,
+    .time-btn:hover {
+      background-color: var(--sage);
+      color: white;
+    }
+
+    .stats-chart {
+      height: 300px;
+    }
+
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background-color: var(--white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--olive);
+    }
+
+    .stat-info h4 {
+      font-size: 0.9rem;
+      color: var(--sage-dark);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--olive-dark);
+    }
+
+    .reward-progress {
+      background-color: var(--white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .progress-header h3 {
+      font-size: 1.2rem;
+      color: var(--olive-dark);
+    }
+
+    .info-badge {
+      background-color: rgba(106, 118, 42, 0.1);
+      color: var(--olive);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .progress-bar-container {
+      height: 10px;
+      background-color: rgba(178, 172, 136, 0.2);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--sage), var(--olive));
+      border-radius: 5px;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      color: var(--sage-dark);
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .next-reward {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: rgba(106, 118, 42, 0.05);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .reward-icon {
+      font-size: 2rem;
+    }
+
+    .reward-info h4 {
+      font-size: 1rem;
+      color: var(--olive-dark);
+      margin-bottom: 0.3rem;
+    }
+
+    .reward-info p {
+      font-size: 0.9rem;
+      color: var(--sage-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .hamburger-menu {
+        display: flex;
+      }
+      
+      .navbar {
+        padding: 20px;
+      }
+      
+      .navbar .logo {
+        margin-left: 10px;
+      }
+      
+      .navbar .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 70%;
+        max-width: 300px;
+        height: 100vh;
+        background: linear-gradient(135deg, #5d6e49, #28331a);
+        flex-direction: column;
+        padding: 100px 30px;
+        gap: 20px;
+        transition: all 0.5s ease;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        align-items: flex-start;
+      }
+      
+      .navbar .nav-links.active {
+        right: 0;
+      }
+
+      .profile-dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stats-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .stats-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* History tab styles */
+    .history-filters {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-dropdown select {
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background-color: white;
+      color: var(--text-dark);
+      font-size: 0.9rem;
+      min-width: 180px;
+    }
+
+    .search-bar {
+      display: flex;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .search-bar input {
+      padding: 0.7rem 1rem;
+      border: none;
+      width: 250px;
+      font-size: 0.9rem;
+    }
+
+    .search-bar .search-btn {
+      background-color: var(--sage);
+      color: white;
+      border: none;
+      padding: 0 1rem;
+      cursor: pointer;
+    }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.2rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s;
+    }
+
+    .history-item:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .history-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--olive);
+      flex-shrink: 0;
+    }
+
+    .history-details {
+      flex: 1;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .history-header h4 {
+      font-size: 1rem;
+      color: var(--olive-dark);
+      font-weight: 600;
+    }
+
+    .history-date {
+      font-size: 0.85rem;
+      color: var(--sage-dark);
+    }
+
+    .history-description {
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .history-params {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .history-param {
+      background-color: rgba(178, 172, 136, 0.1);
+      padding: 0.3rem 0.6rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      color: var(--sage-dark);
+    }
+
+    .history-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .history-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+      background-color: white;
+      color: var(--sage-dark);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .history-action-btn:hover {
+      background-color: var(--sage);
+      color: white;
+      border-color: var(--sage);
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .pagination-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+      background-color: white;
+      color: var(--sage-dark);
+      cursor: pointer;
+    }
+
+    .pagination-btn:hover {
+      background-color: var(--sage-light);
+      color: white;
+    }
+
+    .pagination-numbers {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .pagination-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+      background-color: white;
+      color: var(--sage-dark);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .pagination-number.active {
+      background-color: var(--olive);
+      color: white;
+      border-color: var(--olive);
+    }
+
+    .pagination-number:hover:not(.active) {
+      background-color: var(--sage-light);
+      color: white;
+    }
+
+    .pagination-ellipsis {
+      color: var(--sage-dark);
+    }
+
+    /* Notifications tab styles */
+    .notifications-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .mark-all-read {
+      background-color: transparent;
+      border: 1px solid var(--sage);
+      color: var(--olive);
+      padding: 0.6rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .mark-all-read:hover {
+      background-color: var(--sage);
+      color: white;
+    }
+
+    .notification-filter select {
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background-color: white;
+      color: var(--text-dark);
+      font-size: 0.9rem;
+      min-width: 180px;
+    }
+
+    .notifications-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .notification-item {
+      display: flex;
+      gap: 1rem;
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.2rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border-color);
+      transition: all 0.3s;
+    }
+
+    .notification-item.unread {
+      border-left: 3px solid var(--olive);
+      background-color: rgba(106, 118, 42, 0.03);
+    }
+
+    .notification-item:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .notification-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-content h4 {
+      font-size: 1rem;
+      color: var(--olive-dark);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .notification-content p {
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      margin-bottom: 0.8rem;
+    }
+
+    .notification-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notification-time {
+      font-size: 0.85rem;
+      color: var(--sage-dark);
+    }
+
+    .notification-type {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 15px;
+    }
+
+    .notification-type.recommendation {
+      background-color: rgba(106, 118, 42, 0.1);
+      color: var(--olive);
+    }
+
+    .notification-type.alert {
+      background-color: rgba(230, 119, 0, 0.1);
+      color: #e67700;
+    }
+
+    .notification-type.news {
+      background-color: rgba(33, 150, 243, 0.1);
+      color: #2196f3;
+    }
+
+    .notification-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .notification-action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+      background-color: white;
+      color: var(--sage-dark);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .notification-action-btn:hover {
+      background-color: var(--sage);
+      color: white;
+      border-color: var(--sage);
+    }
+
+    @media (max-width: 768px) {
+      .history-filters,
+      .notifications-actions {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .filter-dropdown,
+      .notification-filter {
+        width: 100%;
+      }
+
+      .filter-dropdown select,
+      .notification-filter select {
+        width: 100%;
+      }
+
+      .search-bar {
+        width: 100%;
+      }
+
+      .search-bar input {
+        width: 100%;
+      }
+
+      .notification-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+
+    /* Rewards tab styles */
+    .rewards-overview {
+      margin-bottom: 2rem;
+    }
+
+    .rewards-balance {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 1.5rem;
+    }
+
+    .balance-card {
+      background: linear-gradient(135deg, var(--sage), var(--olive));
+      border-radius: 12px;
+      padding: 1.5rem;
+      color: white;
+      height: 100%;
+    }
+
+    .balance-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .balance-header h3 {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+
+    .coin-icon {
+      font-size: 1.8rem;
+    }
+
+    .balance-amount {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .balance-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .info-label {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .info-value {
+      font-weight: 500;
+    }
+
+    .balance-history {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .balance-history h3 {
+      font-size: 1.2rem;
+      color: var(--olive-dark);
+      margin-bottom: 1rem;
+    }
+
+    .mini-chart {
+      height: 200px;
+    }
+
+    .how-it-works {
+      margin-bottom: 2rem;
+    }
+
+    .how-it-works h3 {
+      font-size: 1.2rem;
+      color: var(--olive-dark);
+      margin-bottom: 1rem;
+    }
+
+    .earn-methods {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .earn-method {
+      background-color: white;
+      border-radius: 10px;
+      padding: 1.2rem;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .earn-method:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .earn-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .earn-info h4 {
+      font-size: 1rem;
+      color: var(--olive-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .earn-info p {
+      font-size: 0.85rem;
+      color: var(--sage-dark);
+    }
+
+    .redemption-section h3 {
+      font-size: 1.2rem;
+      color: var(--olive-dark);
+      margin-bottom: 1rem;
+    }
+
+    .rewards-filter {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: none;
+      border: 1px solid var(--sage);
+      color: var(--sage-dark);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background-color: var(--sage);
+      color: white;
+    }
+
+    .rewards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .reward-card {
+      background-color: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+    }
+
+    .reward-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .reward-image {
+      position: relative;
+      height: 150px;
+      overflow: hidden;
+    }
+
+    .reward-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .reward-price {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-weight: 600;
+      color: var(--olive-dark);
+    }
+
+    .reward-price .coin-icon {
+      font-size: 1.2rem;
+    }
+
+    .reward-details {
+      padding: 1.2rem;
+    }
+
+    .reward-details h4 {
+      font-size: 1.1rem;
+      color: var(--olive-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .reward-details p {
+      font-size: 0.9rem;
+      color: var(--sage-dark);
+      margin-bottom: 1rem;
+      min-height: 40px;
+    }
+
+    .redeem-reward-btn {
+      background-color: var(--olive);
+      color: white;
+      border: none;
+      padding: 0.7rem 0;
+      border-radius: 8px;
+      width: 100%;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .redeem-reward-btn:hover {
+      background-color: var(--olive-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .rewards-balance {
+        grid-template-columns: 1fr;
+      }
+
+      .earn-methods {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .rewards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .rewards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="/" class="logo">AgroNexus</a>
+    <div class="hamburger-menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="nav-links">
+      <a href="/predict_price">Crop Price Predictor</a>
+      <a href="/crop_rec">Crop Recommendation</a>
+      <a href="/submit">Disease Detection</a>
+      <a href="/height">Height Tracker</a>
+      <a href="/problems_solved">Problems Solved</a>
+      <a href="/user_profile" class="active">User Profile</a>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <div class="page-title">
+      <h1>User Profile</h1>
+      <p>Manage your account, track your progress, and redeem rewards</p>
+    </div>
+
+    <div class="profile-dashboard">
+      <div class="profile-sidebar">
+        <div class="user-info">
+          <div class="user-avatar">R</div>
+          <h2 class="user-name">Rahul Singh</h2>
+          <p class="user-email">rahul.singh@example.com</p>
+          <div class="user-location">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span>Punjab, India</span>
+          </div>
+        </div>
+
+        <div class="coins-section">
+          <h3 class="coins-title">AgroCoins Balance</h3>
+          <div class="coins-amount">
+            <span class="coins-icon">🌾</span>
+            <span>1,250</span>
+          </div>
+          <button class="redeem-btn">Redeem Coins</button>
+        </div>
+
+        <div class="profile-nav">
+          <a href="#" class="profile-nav-item active" data-tab="dashboard">
+            <div class="profile-nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </div>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="profile-nav-item" data-tab="history">
+            <div class="profile-nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <span>Activity History</span>
+          </a>
+          <a href="#" class="profile-nav-item" data-tab="notifications">
+            <div class="profile-nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+            </div>
+            <span>Notifications</span>
+          </a>
+          <a href="#" class="profile-nav-item" data-tab="rewards">
+            <div class="profile-nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+              </svg>
+            </div>
+            <span>Rewards</span>
+          </a>
+          <a href="#" class="profile-nav-item" data-tab="settings">
+            <div class="profile-nav-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </div>
+            <span>Settings</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="profile-content">
+        <div id="dashboard-content" class="tab-content active">
+          <div class="tab-header">
+            <h2>Dashboard</h2>
+            <p>View your activity summary and app usage statistics</p>
+          </div>
+
+          <div class="usage-stats">
+            <div class="stats-header">
+              <h3>App Usage Statistics</h3>
+              <div class="time-filter">
+                <button class="time-btn active" data-period="week">Week</button>
+                <button class="time-btn" data-period="month">Month</button>
+                <button class="time-btn" data-period="year">Year</button>
+              </div>
+            </div>
+            <div class="stats-chart">
+              <canvas id="usageChart"></canvas>
+            </div>
+          </div>
+
+          <div class="stats-cards">
+            <div class="stat-card">
+              <div class="stat-icon" style="background-color: rgba(106, 118, 42, 0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <h4>Crops Recommended</h4>
+                <p class="stat-number">15</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background-color: rgba(178, 172, 136, 0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m18 5-3-3H7L4 5"></path>
+                  <path d="M18 5v14l-3 3H7l-3-3V5"></path>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <h4>Diseases Detected</h4>
+                <p class="stat-number">8</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background-color: rgba(106, 118, 42, 0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <h4>Price Predictions</h4>
+                <p class="stat-number">12</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background-color: rgba(178, 172, 136, 0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 3v18h18"></path>
+                  <path d="M3 15L9 9l4 4 8-8"></path>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <h4>Height Tracking</h4>
+                <p class="stat-number">10</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="reward-progress">
+            <div class="progress-header">
+              <h3>Reward Progress</h3>
+              <span class="info-badge">250 more coins until next reward</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" style="width: 80%;"></div>
+            </div>
+            <div class="progress-labels">
+              <span>1,250 coins</span>
+              <span>1,500 coins</span>
+            </div>
+            <div class="next-reward">
+              <div class="reward-icon">🚜</div>
+              <div class="reward-info">
+                <h4>Next Reward: Tractor Rental Discount</h4>
+                <p>Get 15% off on your next tractor rental</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="history-content" class="tab-content">
+          <div class="tab-header">
+            <h2>Activity History</h2>
+            <p>View your past activities and recommendations</p>
+          </div>
+
+          <div class="history-filters">
+            <div class="filter-dropdown">
+              <select id="activity-filter">
+                <option value="all">All Activities</option>
+                <option value="crop-rec">Crop Recommendations</option>
+                <option value="disease">Disease Detection</option>
+                <option value="price">Price Predictions</option>
+                <option value="height">Height Tracking</option>
+              </select>
+            </div>
+            <div class="search-bar">
+              <input type="text" placeholder="Search history...">
+              <button class="search-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="history-list">
+            <div class="history-item">
+              <div class="history-icon" style="background-color: rgba(106, 118, 42, 0.1);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+              </div>
+              <div class="history-details">
+                <div class="history-header">
+                  <h4>Crop Recommendation</h4>
+                  <span class="history-date">Oct 15, 2023</span>
+                </div>
+                <p class="history-description">Recommended crop: Wheat</p>
+                <div class="history-params">
+                  <span class="history-param">Nitrogen: 90</span>
+                  <span class="history-param">Phosphorus: 42</span>
+                  <span class="history-param">Potassium: 43</span>
+                  <span class="history-param">pH: 6.5</span>
+                </div>
+              </div>
+              <div class="history-actions">
+                <button class="history-action-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="history-item">
+              <div class="history-icon" style="background-color: rgba(178, 172, 136, 0.1);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m18 5-3-3H7L4 5"></path>
+                  <path d="M18 5v14l-3 3H7l-3-3V5"></path>
+                </svg>
+              </div>
+              <div class="history-details">
+                <div class="history-header">
+                  <h4>Disease Detection</h4>
+                  <span class="history-date">Oct 10, 2023</span>
+                </div>
+                <p class="history-description">Detected: Tomato Late Blight</p>
+                <div class="history-params">
+                  <span class="history-param">Confidence: 92%</span>
+                </div>
+              </div>
+              <div class="history-actions">
+                <button class="history-action-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="history-item">
+              <div class="history-icon" style="background-color: rgba(106, 118, 42, 0.1);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <div class="history-details">
+                <div class="history-header">
+                  <h4>Price Prediction</h4>
+                  <span class="history-date">Oct 5, 2023</span>
+                </div>
+                <p class="history-description">Predicted price for Rice: ₹2,250/quintal</p>
+                <div class="history-params">
+                  <span class="history-param">Market: Ludhiana</span>
+                  <span class="history-param">Season: Rabi</span>
+                </div>
+              </div>
+              <div class="history-actions">
+                <button class="history-action-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="history-item">
+              <div class="history-icon" style="background-color: rgba(178, 172, 136, 0.1);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 3v18h18"></path>
+                  <path d="M3 15L9 9l4 4 8-8"></path>
+                </svg>
+              </div>
+              <div class="history-details">
+                <div class="history-header">
+                  <h4>Height Tracking</h4>
+                  <span class="history-date">Sep 30, 2023</span>
+                </div>
+                <p class="history-description">Tracked height for Maize: 150cm</p>
+                <div class="history-params">
+                  <span class="history-param">Days since plantation: 45</span>
+                  <span class="history-param">Growth rate: Good</span>
+                </div>
+              </div>
+              <div class="history-actions">
+                <button class="history-action-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pagination">
+            <button class="pagination-btn prev">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <div class="pagination-numbers">
+              <button class="pagination-number active">1</button>
+              <button class="pagination-number">2</button>
+              <button class="pagination-number">3</button>
+              <span class="pagination-ellipsis">...</span>
+              <button class="pagination-number">8</button>
+            </div>
+            <button class="pagination-btn next">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="notifications-content" class="tab-content">
+          <div class="tab-header">
+            <h2>Notifications</h2>
+            <p>Stay updated with the latest news and recommendations</p>
+          </div>
+
+          <div class="notifications-actions">
+            <button class="mark-all-read">Mark all as read</button>
+            <div class="notification-filter">
+              <select id="notification-type">
+                <option value="all">All Notifications</option>
+                <option value="unread">Unread</option>
+                <option value="recommendations">Recommendations</option>
+                <option value="alerts">Alerts</option>
+                <option value="news">News</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="notifications-list">
+            <div class="notification-item unread">
+              <div class="notification-icon" style="background-color: #ebf3e5;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6a762a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 11 12 14 22 4"></polyline>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+              </div>
+              <div class="notification-content">
+                <h4>New Fertilizer Recommendation Available</h4>
+                <p>Based on your recent crop recommendation, we suggest using NPK 20-20-20 for better yield.</p>
+                <div class="notification-meta">
+                  <span class="notification-time">2 hours ago</span>
+                  <span class="notification-type recommendation">Recommendation</span>
+                </div>
+              </div>
+              <div class="notification-actions">
+                <button class="notification-action-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="19" cy="12" r="1"></circle>
+                    <circle cx="5" cy="12" r="1"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="notification-item unread">
+              <div class="notification-icon" style="background-color: #fff5e6;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e67700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
+              <div class="notification-content">
+                <h4>Seed Sale on Maize Ends Soon</h4>
+                <p>The special discount on Maize seeds ends in 2 days. Don't miss out on 25% off!</p>
+                <div class="notification-meta">
+                  <span class="notification-time">1 day ago</span>
+                  <span class="notification-type alert">Alert</span>
+                </div>
+              </div>
+              <div class="notification-actions">
+                <button class="notification-action-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="19" cy="12" r="1"></circle>
+                    <circle cx="5" cy="12" r="1"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="notification-item">
+              <div class="notification-icon" style="background-color: #e3f2fd;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2196f3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+              </div>
+              <div class="notification-content">
+                <h4>Weather Alert: Heavy Rain Expected</h4>
+                <p>Heavy rainfall is expected in your region over the next 48 hours. Take necessary precautions for your crops.</p>
+                <div class="notification-meta">
+                  <span class="notification-time">3 days ago</span>
+                  <span class="notification-type news">News</span>
+                </div>
+              </div>
+              <div class="notification-actions">
+                <button class="notification-action-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="19" cy="12" r="1"></circle>
+                    <circle cx="5" cy="12" r="1"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="notification-item">
+              <div class="notification-icon" style="background-color: #ebf3e5;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6a762a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 11 12 14 22 4"></polyline>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+              </div>
+              <div class="notification-content">
+                <h4>New Farming Workshop Available</h4>
+                <p>Join our upcoming workshop on organic farming techniques on October 25, 2023.</p>
+                <div class="notification-meta">
+                  <span class="notification-time">1 week ago</span>
+                  <span class="notification-type recommendation">Recommendation</span>
+                </div>
+              </div>
+              <div class="notification-actions">
+                <button class="notification-action-btn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="19" cy="12" r="1"></circle>
+                    <circle cx="5" cy="12" r="1"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="rewards-content" class="tab-content">
+          <div class="tab-header">
+            <h2>Rewards & Redemption</h2>
+            <p>Redeem your AgroCoins for exclusive rewards and discounts</p>
+          </div>
+
+          <div class="rewards-overview">
+            <div class="rewards-balance">
+              <div class="balance-card">
+                <div class="balance-header">
+                  <h3>Your AgroCoins</h3>
+                  <div class="coin-icon">🌾</div>
+                </div>
+                <div class="balance-amount">1,250</div>
+                <div class="balance-info">
+                  <div class="info-item">
+                    <span class="info-label">Earned this month</span>
+                    <span class="info-value">350</span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Redeemed this month</span>
+                    <span class="info-value">100</span>
+                  </div>
+                </div>
+              </div>
+              <div class="balance-history">
+                <h3>Earning History</h3>
+                <div class="mini-chart">
+                  <canvas id="coinsChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="how-it-works">
+            <h3>How to Earn AgroCoins</h3>
+            <div class="earn-methods">
+              <div class="earn-method">
+                <div class="earn-icon">📊</div>
+                <div class="earn-info">
+                  <h4>Get Crop Recommendations</h4>
+                  <p>Earn 50 coins per recommendation</p>
+                </div>
+              </div>
+              <div class="earn-method">
+                <div class="earn-icon">🔍</div>
+                <div class="earn-info">
+                  <h4>Detect Plant Diseases</h4>
+                  <p>Earn 50 coins per detection</p>
+                </div>
+              </div>
+              <div class="earn-method">
+                <div class="earn-icon">💰</div>
+                <div class="earn-info">
+                  <h4>Use Price Predictor</h4>
+                  <p>Earn 25 coins per prediction</p>
+                </div>
+              </div>
+              <div class="earn-method">
+                <div class="earn-icon">📏</div>
+                <div class="earn-info">
+                  <h4>Track Crop Height</h4>
+                  <p>Earn 25 coins per tracking</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="redemption-section">
+            <h3>Available Rewards</h3>
+            <div class="rewards-filter">
+              <button class="filter-btn active" data-filter="all">All Rewards</button>
+              <button class="filter-btn" data-filter="equipment">Equipment</button>
+              <button class="filter-btn" data-filter="seeds">Seeds & Fertilizers</button>
+              <button class="filter-btn" data-filter="services">Services</button>
+            </div>
+
+            <div class="rewards-grid">
+              <div class="reward-card" data-category="equipment">
+                <div class="reward-image">
+                  <img src="https://placehold.co/300x200/e9e6d6/6a762a?text=Tractor+Rental" alt="Tractor Rental">
+                  <div class="reward-price">
+                    <span class="coin-icon">🌾</span>
+                    <span>1,500</span>
+                  </div>
+                </div>
+                <div class="reward-details">
+                  <h4>Tractor Rental Discount</h4>
+                  <p>Get 15% off on your next tractor rental</p>
+                  <button class="redeem-reward-btn" data-coins="1500">Redeem</button>
+                </div>
+              </div>
+
+              <div class="reward-card" data-category="seeds">
+                <div class="reward-image">
+                  <img src="https://placehold.co/300x200/e9e6d6/6a762a?text=Premium+Seeds" alt="Premium Seeds">
+                  <div class="reward-price">
+                    <span class="coin-icon">🌾</span>
+                    <span>800</span>
+                  </div>
+                </div>
+                <div class="reward-details">
+                  <h4>Premium Seeds Pack</h4>
+                  <p>High-yielding seeds for wheat, rice, or maize</p>
+                  <button class="redeem-reward-btn" data-coins="800">Redeem</button>
+                </div>
+              </div>
+
+              <div class="reward-card" data-category="services">
+                <div class="reward-image">
+                  <img src="https://placehold.co/300x200/e9e6d6/6a762a?text=Soil+Testing" alt="Soil Testing">
+                  <div class="reward-price">
+                    <span class="coin-icon">🌾</span>
+                    <span>500</span>
+                  </div>
+                </div>
+                <div class="reward-details">
+                  <h4>Free Soil Testing</h4>
+                  <p>Professional soil testing service for your farm</p>
+                  <button class="redeem-reward-btn" data-coins="500">Redeem</button>
+                </div>
+              </div>
+
+              <div class="reward-card" data-category="equipment">
+                <div class="reward-image">
+                  <img src="https://placehold.co/300x200/e9e6d6/6a762a?text=Farm+Tools" alt="Farm Tools">
+                  <div class="reward-price">
+                    <span class="coin-icon">🌾</span>
+                    <span>350</span>
+                  </div>
+                </div>
+                <div class="reward-details">
+                  <h4>Farm Tools Set</h4>
+                  <p>Essential tools for everyday farming tasks</p>
+                  <button class="redeem-reward-btn" data-coins="350">Redeem</button>
+                </div>
+              </div>
+
+              <div class="reward-card" data-category="seeds">
+                <div class="reward-image">
+                  <img src="https://placehold.co/300x200/e9e6d6/6a762a?text=Fertilizer" alt="Fertilizer">
+                  <div class="reward-price">
+                    <span class="coin-icon">🌾</span>
+                    <span>400</span>
+                  </div>
+                </div>
+                <div class="reward-details">
+                  <h4>Organic Fertilizer</h4>
+                  <p>5kg of premium organic fertilizer</p>
+                  <button class="redeem-reward-btn" data-coins="400">Redeem</button>
+                </div>
+              </div>
+
+              <div class="reward-card" data-category="services">
+                <div class="reward-image">
+                  <img src="https://placehold.co/300x200/e9e6d6/6a762a?text=Consultation" alt="Consultation">
+                  <div class="reward-price">
+                    <span class="coin-icon">🌾</span>
+                    <span>600</span>
+                  </div>
+                </div>
+                <div class="reward-details">
+                  <h4>Expert Consultation</h4>
+                  <p>30-minute consultation with an agriculture expert</p>
+                  <button class="redeem-reward-btn" data-coins="600">Redeem</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="settings-content" class="tab-content">
+          <!-- Settings tab content will be added later -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navLinks = document.querySelector('.nav-links');
+    
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      
+      // Animate hamburger menu
+      const spans = hamburger.querySelectorAll('span');
+      spans.forEach(span => span.classList.toggle('active'));
+      
+      if (navLinks.classList.contains('active')) {
+        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+      } else {
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+      }
+    });
+    
+    // Close mobile menu when clicking on a navigation link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1024) {
+          navLinks.classList.remove('active');
+          const spans = hamburger.querySelectorAll('span');
+          spans[0].style.transform = 'none';
+          spans[1].style.opacity = '1';
+          spans[2].style.transform = 'none';
+        }
+      });
+    });
+
+    // Tab navigation
+    document.querySelectorAll('.profile-nav-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all items
+        document.querySelectorAll('.profile-nav-item').forEach(i => {
+          i.classList.remove('active');
+        });
+        
+        // Add active class to clicked item
+        this.classList.add('active');
+        
+        // Show corresponding tab content
+        const tabId = this.getAttribute('data-tab');
+        showTabContent(tabId);
+      });
+    });
+
+    function showTabContent(tabId) {
+      // Hide all tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Show selected tab content
+      const selectedTab = document.getElementById(tabId + '-content');
+      if (selectedTab) {
+        selectedTab.classList.add('active');
+      }
+    }
+
+    // Initialize usage chart
+    const ctx = document.getElementById('usageChart').getContext('2d');
+    
+    // Sample data
+    const weekData = {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      datasets: [
+        {
+          label: 'App Usage (Minutes)',
+          data: [30, 45, 25, 60, 35, 50, 40],
+          backgroundColor: 'rgba(106, 118, 42, 0.2)',
+          borderColor: '#6a762a',
+          borderWidth: 2,
+          pointBackgroundColor: '#6a762a',
+          tension: 0.4
+        }
+      ]
+    };
+    
+    const monthData = {
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+      datasets: [
+        {
+          label: 'App Usage (Minutes)',
+          data: [180, 220, 165, 240],
+          backgroundColor: 'rgba(106, 118, 42, 0.2)',
+          borderColor: '#6a762a',
+          borderWidth: 2,
+          pointBackgroundColor: '#6a762a',
+          tension: 0.4
+        }
+      ]
+    };
+    
+    const yearData = {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      datasets: [
+        {
+          label: 'App Usage (Hours)',
+          data: [10, 14, 8, 12, 15, 18, 20, 17, 14, 13, 16, 19],
+          backgroundColor: 'rgba(106, 118, 42, 0.2)',
+          borderColor: '#6a762a',
+          borderWidth: 2,
+          pointBackgroundColor: '#6a762a',
+          tension: 0.4
+        }
+      ]
+    };
+    
+    // Chart configuration
+    const chartConfig = {
+      type: 'line',
+      data: weekData,
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(178, 172, 136, 0.1)'
+            }
+          },
+          x: {
+            grid: {
+              color: 'rgba(178, 172, 136, 0.1)'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    };
+    
+    const usageChart = new Chart(ctx, chartConfig);
+    
+    // Time period buttons
+    document.querySelectorAll('.time-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Remove active class from all buttons
+        document.querySelectorAll('.time-btn').forEach(b => {
+          b.classList.remove('active');
+        });
+        
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        // Update chart data
+        const period = this.getAttribute('data-period');
+        
+        if (period === 'week') {
+          usageChart.data = weekData;
+        } else if (period === 'month') {
+          usageChart.data = monthData;
+        } else if (period === 'year') {
+          usageChart.data = yearData;
+        }
+        
+        usageChart.update();
+      });
+    });
+
+    // Initialize coins chart
+    document.addEventListener('DOMContentLoaded', function() {
+      // Only initialize if tab is visible or when tab becomes visible
+      const coinsChartElement = document.getElementById('coinsChart');
+      if (coinsChartElement) {
+        const coinCtx = coinsChartElement.getContext('2d');
+        
+        const coinData = {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [
+            {
+              label: 'AgroCoins Earned',
+              data: [250, 320, 180, 400, 300, 350],
+              backgroundColor: 'rgba(106, 118, 42, 0.2)',
+              borderColor: '#6a762a',
+              borderWidth: 2,
+              tension: 0.4
+            }
+          ]
+        };
+        
+        const coinChartConfig = {
+          type: 'bar',
+          data: coinData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(178, 172, 136, 0.1)'
+                }
+              },
+              x: {
+                grid: {
+                  display: false
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        };
+        
+        new Chart(coinCtx, coinChartConfig);
+      }
+      
+      // Reward filtering
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          // Remove active class from all filter buttons
+          document.querySelectorAll('.filter-btn').forEach(b => {
+            b.classList.remove('active');
+          });
+          
+          // Add active class to clicked button
+          this.classList.add('active');
+          
+          // Get filter category
+          const filterCategory = this.getAttribute('data-filter');
+          
+          // Filter reward cards
+          document.querySelectorAll('.reward-card').forEach(card => {
+            if (filterCategory === 'all' || card.getAttribute('data-category') === filterCategory) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+      
+      // Redeem buttons
+      document.querySelectorAll('.redeem-reward-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const coinCost = parseInt(this.getAttribute('data-coins'));
+          const currentCoins = 1250; // This would come from user data in a real app
+          
+          if (currentCoins >= coinCost) {
+            alert(`Reward redeemed successfully! You spent ${coinCost} AgroCoins.`);
+            // In a real app, you would update the user's coin balance here
+          } else {
+            alert(`Not enough AgroCoins. You need ${coinCost - currentCoins} more coins.`);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html> 
