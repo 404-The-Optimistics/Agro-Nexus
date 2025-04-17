@@ -641,28 +641,7 @@
             // Scroll to loading indicator
             document.getElementById('loading').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-            // Simulate a fetch request with timeout for demo
-            setTimeout(() => {
-                const mockData = {
-                    status: 'success',
-                    recommendation: "Based on your location, farming experience, land size, irrigation method, budget, and market preference, we recommend growing <strong>Maize</strong> for this season. Maize is well-suited to your soil conditions and climate, with good market potential. Consider hybrid varieties for higher yield. Expected ROI: 35-40%.",
-                    environmental_data: {
-                        ndvi: 0.6543,
-                        ndwi: 0.2134,
-                        soil_ph: 6.8,
-                        weather: {
-                            temperature_2m: 29.5,
-                            total_precipitation: 78.3
-                        }
-                    }
-                };
-                
-                document.getElementById('loading').style.display = 'none';
-                displayRecommendation(mockData);
-            }, 2000);
-
-            // Uncomment for actual implementation:
-            /*
+            // Make API call to get recommendations
             fetch('/get_recommendation', {
                 method: 'POST',
                 headers: {
@@ -678,16 +657,36 @@
             .then(data => {
                 document.getElementById('loading').style.display = 'none';
                 if (data.status === 'success') {
-                    displayRecommendation(data);
+                    // Create a formatted recommendation HTML
+                    const recommendationHtml = `
+                        <div class="recommendation-text">
+                            ${data.recommendation}
+                        </div>
+                    `;
+                    
+                    document.getElementById('recommendation-content').innerHTML = recommendationHtml;
+                    
+                    // Display environmental data
+                    const envData = data.environmental_data;
+                    document.getElementById('environmental-data').innerHTML = `
+                        <h3>Environmental Data</h3>
+                        <p><strong>NDVI (Vegetation Index):</strong> ${envData.ndvi.toFixed(4)}</p>
+                        <p><strong>NDWI (Water Index):</strong> ${envData.ndwi.toFixed(4)}</p>
+                        <p><strong>Soil pH:</strong> ${envData.soil_ph.toFixed(2)}</p>
+                        <p><strong>Average Temperature:</strong> ${envData.weather.temperature_2m.toFixed(2)}°C</p>
+                        <p><strong>Average Precipitation:</strong> ${envData.weather.total_precipitation.toFixed(2)} mm</p>
+                    `;
+                    
+                    document.getElementById('recommendation').style.display = 'block';
+                    document.getElementById('recommendation').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 } else {
-                    showError(data.message);
+                    showError(data.message || 'Error getting recommendations');
                 }
             })
             .catch(error => {
                 document.getElementById('loading').style.display = 'none';
                 showError('Error getting recommendations: ' + error.message);
             });
-            */
         }
 
         function validateQuestionnaire(data) {
@@ -698,26 +697,6 @@
                 }
             }
             return true;
-        }
-
-        function displayRecommendation(data) {
-            document.getElementById('recommendation-content').innerHTML = 
-                `<div class="recommendation-text">${data.recommendation}</div>`;
-            
-            const envData = data.environmental_data;
-            document.getElementById('environmental-data').innerHTML = `
-                <h3>Environmental Data</h3>
-                <p><strong>NDVI (Vegetation Index):</strong> ${envData.ndvi.toFixed(4)}</p>
-                <p><strong>NDWI (Water Index):</strong> ${envData.ndwi.toFixed(4)}</p>
-                <p><strong>Soil pH:</strong> ${envData.soil_ph.toFixed(2)}</p>
-                <p><strong>Average Temperature:</strong> ${envData.weather.temperature_2m.toFixed(2)}°C</p>
-                <p><strong>Average Precipitation:</strong> ${envData.weather.total_precipitation.toFixed(2)} mm</p>
-            `;
-            
-            document.getElementById('recommendation').style.display = 'block';
-            
-            // Scroll to recommendation
-            document.getElementById('recommendation').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function showError(message) {
