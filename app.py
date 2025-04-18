@@ -587,6 +587,5 @@ def get_recommendation():
             'message': str(e)
         })
 
-
 if __name__=='__main__':
     app.run(debug=True)
