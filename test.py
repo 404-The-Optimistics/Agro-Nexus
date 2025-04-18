@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, Blueprint
 import ee
 import google.generativeai as genai
 import os
 from datetime import datetime, timedelta
 
-app = Flask(__name__)
+bp2 = Blueprint('bp2', __name__)
+
 
 # Initialize Google Earth Engine
 try:
@@ -118,11 +119,11 @@ def get_crop_recommendation(ndvi, ndwi, soil_ph, weather_data, farmer_responses)
         print(f"Error generating recommendation: {str(e)}")
         return "Unable to generate crop recommendations at the moment. Please try again later."
 
-@app.route('/')
+@bp2.route('/crop_rec')
 def index():
     return render_template('index.html')
 
-@app.route('/get_recommendation', methods=['POST'])
+@bp2.route('/get_recommendation', methods=['POST'])
 def get_recommendation():
     try:
         data = request.json
@@ -183,6 +184,3 @@ def get_recommendation():
             'status': 'error',
             'message': str(e)
         })
-
-if __name__ == '__main__':
-    app.run(debug=True) 

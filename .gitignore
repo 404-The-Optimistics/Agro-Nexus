@@ -7,3 +7,5 @@ env
 
 # Ignore .env file (if using it for sensitive data)
 .env
+
+__pycache__
