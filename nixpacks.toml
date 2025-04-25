@@ -11,19 +11,18 @@ nixPkgs = [
   "python310Packages.numpy",
   "python310Packages.matplotlib",
   "python310Packages.scikit-image",
-  "python310Packages.torch",
-  "python310Packages.torchvision",
   "python310Packages.pandas",
-  "python310Packages.cloudinary",
-  "python310Packages.earthengine-api",
-  "python310Packages.google-generativeai",
-  "python310Packages.opencv-python",
   "python310Packages.gunicorn",
   "python310Packages.scikit-learn"
 ]
 
 [phases.install]
 cmds = [
+  "pip install torch torchvision",
+  "pip install cloudinary",
+  "pip install earthengine-api",
+  "pip install google-generativeai",
+  "pip install opencv-python",
   "pip install -r requirements.txt"
 ]
 
