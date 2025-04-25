@@ -1,21 +1,9 @@
 [phases.setup]
-nixPkgs = [
-  "python310Full",
-  "python310Packages.pip",  
-  "libGL",
-  "pkg-config",
-  "glib",
-  "libxkbcommon",
-  "mesa",
-  "xorg.libX11",
-  "xorg.libXext",
-  "xorg.libXrender"
-]
+nixPkgs = ["python310Full", "python310Packages.pip"]
 
 [phases.install]
 cmds = [
-  "python3 -m pip install --upgrade pip",
-  "python3 -m pip install -r requirements.txt"
+  "pip install -r requirements.txt"
 ]
 
 [start]
