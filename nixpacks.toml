@@ -1,14 +1,30 @@
 [phases.setup]
-nixPkgs = ["python310Full", "python310Packages.pip"]
+nixPkgs = [
+  "python310Full",
+  "python310Packages.flask",
+  "python310Packages.pymongo",
+  "python310Packages.python-dotenv",
+  "python310Packages.requests",
+  "python310Packages.werkzeug",
+  "python310Packages.flask-cors",
+  "python310Packages.pillow",
+  "python310Packages.numpy",
+  "python310Packages.matplotlib",
+  "python310Packages.scikit-image",
+  "python310Packages.torch",
+  "python310Packages.torchvision",
+  "python310Packages.pandas",
+  "python310Packages.cloudinary",
+  "python310Packages.earthengine-api",
+  "python310Packages.google-generativeai",
+  "python310Packages.opencv-python",
+  "python310Packages.gunicorn",
+  "python310Packages.scikit-learn"
+]
 
 [phases.install]
 cmds = [
-  "python -m venv /app/venv",
-  ". /app/venv/bin/activate",
-  "pip install --upgrade pip",
-  "pip install -r requirements.txt",
-  "pip install gunicorn",
-  "pip list"
+  "pip install -r requirements.txt"
 ]
 
 [start]
