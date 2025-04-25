@@ -10,6 +10,10 @@ def create_app():
     # Load configuration
     app.config.from_object(Config)
     
+    @app.route('/test')
+    def test():
+        return 'Application is running!'
+    
     # Lazy loading of blueprints to reduce initial memory usage
     def register_blueprints():
         from test import bp2
