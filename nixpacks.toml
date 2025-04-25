@@ -1,6 +1,7 @@
 [phases.setup]
 nixPkgs = [
-  "python310Full",  # Ensures pip and full stdlib
+  "python310Full",
+  "python310Packages.pip",  
   "libGL",
   "pkg-config",
   "glib",
@@ -13,8 +14,8 @@ nixPkgs = [
 
 [phases.install]
 cmds = [
-  "python3 -m pip install --upgrade pip",  # ✅ reliable
-  "python3 -m pip install -r requirements.txt"  # ✅ reliable
+  "python3 -m pip install --upgrade pip",
+  "python3 -m pip install -r requirements.txt"
 ]
 
 [start]
