@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordField = document.getElementById('password');
-    const signInBtn = document.getElementById('signInBtn');
+    // Initialize variables
     const emailField = document.getElementById('email');
+    const passwordField = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+    const signInBtn = document.getElementById('signInBtn');
+    const inputFields = document.querySelectorAll('.input-field input');
     
     // Password visibility toggle
     togglePassword.addEventListener('click', function() {
@@ -18,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Input field focus effects
-    const inputFields = document.querySelectorAll('.input-field input');
     inputFields.forEach(input => {
         input.addEventListener('focus', function() {
             this.parentElement.style.borderColor = '#6a762a';
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
             signInBtn.disabled = true;
             
             // Make API call to backend
-            fetch('http://localhost:5000/api/login', {
+            fetch('/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -126,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 notification.style.borderRadius = '4px';
                 notification.style.zIndex = '1000';
                 notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-                notification.textContent = error.error || 'Login failed';
+                notification.textContent = error.error || 'Login failed. Please check your credentials.';
                 
                 document.body.appendChild(notification);
                 
@@ -146,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Email validation
+    // Email validation function
     function isValidEmail(email) {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);

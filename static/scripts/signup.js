@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize variables
     const togglePassword = document.getElementById('togglePassword');
     const passwordField = document.getElementById('password');
     const signUpBtn = document.getElementById('signUpBtn');
     const termsAgree = document.getElementById('termsAgree');
+    const inputFields = document.querySelectorAll('.input-field input');
     
     // Password visibility toggle
     togglePassword.addEventListener('click', function() {
@@ -18,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Input field focus effects
-    const inputFields = document.querySelectorAll('.input-field input');
     inputFields.forEach(input => {
         input.addEventListener('focus', function() {
             this.parentElement.style.borderColor = '#6a762a';
@@ -94,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             signUpBtn.disabled = true;
             
             // Make API call to backend
-            fetch('http://localhost:5000/api/signup', {
+            fetch('/api/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -156,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 notification.style.zIndex = '1000';
                 notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
                 notification.style.fontWeight = '500';
-                notification.textContent = error.error || 'Failed to create account';
+                notification.textContent = error.error || 'Failed to create account. Please try again.';
                 
                 document.body.appendChild(notification);
                 
