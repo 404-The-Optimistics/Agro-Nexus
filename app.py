@@ -14,15 +14,21 @@ def create_app():
     def test():
         return 'Application is running!'
     
-    # Lazy loading of blueprints to reduce initial memory usage
-    def register_blueprints():
+    # Register blueprints
+    try:
         from test import bp2
         from test2 import bp1
         app.register_blueprint(bp1, url_prefix='/')
         app.register_blueprint(bp2, url_prefix='/')
-    
-    register_blueprints()
+        print("Blueprints registered successfully")
+    except Exception as e:
+        print(f"Error registering blueprints: {str(e)}")
     
     return app
 
+# Create the application instance
 app = create_app()
+
+# Ensure the app exists
+if not app:
+    raise RuntimeError("Failed to create Flask application")
