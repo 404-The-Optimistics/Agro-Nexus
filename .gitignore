@@ -1,11 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Local environment
+.env
+
+# Keep these files
+!models/*.pkl
+!datasets/*.csv
+
 # Ignore virtual environments
 tf-env/
 tf-env310/
 myenv/
-venv/
-env
 
 # Ignore .env file (if using it for sensitive data)
-
-
-__pycache__
