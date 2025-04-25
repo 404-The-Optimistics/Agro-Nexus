@@ -1,22 +1,12 @@
 [phases.setup]
-nixPkgs = [
-  "python310Full",
-  "python310Packages.pip",  
-  "libGL",
-  "pkg-config",
-  "glib",
-  "libxkbcommon",
-  "mesa",
-  "xorg.libX11",
-  "xorg.libXext",
-  "xorg.libXrender"
-]
+nixPkgs = ["python310Full", "python310Packages.pip"]
 
 [phases.install]
 cmds = [
-  "python3 -m pip install --upgrade pip",
-  "python3 -m pip install -r requirements.txt"
+  "python3 -m venv /app/venv",
+  "/app/venv/bin/pip install --upgrade pip",
+  "/app/venv/bin/pip install -r requirements.txt"
 ]
 
 [start]
-cmd = "gunicorn main:app --bind 0.0.0.0:$PORT"
+cmd = "/app/venv/bin/gunicorn main:app --bind 0.0.0.0:$PORT"
