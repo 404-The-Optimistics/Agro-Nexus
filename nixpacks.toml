@@ -1,11 +1,12 @@
 [phases.setup]
-nixPkgs = ["python310", "libGL", "pkg-config", "glib", "libxkbcommon", "mesa", "xorg.libX11", "xorg.libXext", "xorg.libXrender"]
+nixPkgs = ["python310", "libGL", "pkg-config", "glib", "libxkbcommon", "mesa", "xorg.libX11", "xorg.libXext", "xorg.libXrender", "curl"]
 
 [phases.install]
 cmds = [
-  "python3 -m ensurepip --upgrade",
-  "python3 -m pip install --upgrade pip",
-  "python3 -m pip install -r requirements.txt"
+  "curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py",
+  "python3 get-pip.py",
+  "pip install --upgrade pip",
+  "pip install -r requirements.txt"
 ]
 
 [start]
