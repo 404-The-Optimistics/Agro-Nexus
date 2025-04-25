@@ -21,7 +21,9 @@ var/
 
 # Virtual Environment
 venv/
-ENV/
+myenv/
+tf-env/
+tf-env310/
 
 # IDE
 .idea/
@@ -32,16 +34,14 @@ ENV/
 # Logs
 *.log
 
-# Local environment
-.env
+# Local development
+instance/
+.webassets-cache
 
-# Keep these files
-!models/*.pkl
-!datasets/*.csv
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# Ignore virtual environments
-tf-env/
-tf-env310/
-myenv/
-
-# Ignore .env file (if using it for sensitive data)
+# Model files and datasets (if they're too large)
+# Uncomment if you don't want to track these
+# models/*.pkl
+# datasets/*.csv

@@ -1,3 +1,0 @@
-"""
-AgroNexus Application Package
-""" 
