@@ -1,3 +1,3 @@
 #!/bin/bash
 cd /home/site/wwwroot
-gunicorn --bind=0.0.0.0:8000 --timeout 600 --workers 4 app:app 
+gunicorn --config gunicorn_config.py app:app 
