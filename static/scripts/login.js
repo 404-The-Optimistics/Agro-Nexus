@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         const email = emailField.value;
         const password = passwordField.value;
+        const captchaResponse = grecaptcha.getResponse();
         let isValid = true;
         
         // Reset previous error states
@@ -59,6 +60,34 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordField.placeholder = 'Password is required';
             isValid = false;
         }
+
+        if (!captchaResponse) {
+            // Show CAPTCHA error
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = '#d9534f';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '4px';
+            notification.style.zIndex = '1000';
+            notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+            notification.textContent = 'Please complete the CAPTCHA verification';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+            
+            isValid = false;
+        }
         
         if (isValid) {
             signInBtn.innerHTML = '<span>Signing in...</span>';
@@ -72,7 +101,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify({
                     email: email,
-                    password: password
+                    password: password,
+                    captcha: captchaResponse
                 })
             })
             .then(response => {
