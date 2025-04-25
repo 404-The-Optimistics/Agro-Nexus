@@ -7,17 +7,29 @@ import requests
 
 bp2 = Blueprint('bp2', __name__)
 
-
 # Initialize Google Earth Engine
 try:
-    ee.Initialize(project='agronexus-457107')
+    # Try to use service account credentials if available
+    if os.getenv('GOOGLE_APPLICATION_CREDENTIALS'):
+        credentials = ee.ServiceAccountCredentials(
+            email=os.getenv('EE_SERVICE_ACCOUNT'),
+            key_file=os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+        )
+        ee.Initialize(credentials, project='agronexus-457107')
+    else:
+        # Fallback to default initialization
+        ee.Initialize(project='agronexus-457107')
 except Exception as e:
-    print("Please authenticate Google Earth Engine first")
+    print(f"Earth Engine initialization error: {str(e)}")
 
 # Configure Gemini API
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
-genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel('gemini-2.0-flash')
+if GOOGLE_API_KEY:
+    genai.configure(api_key=GOOGLE_API_KEY)
+    model = genai.GenerativeModel('gemini-pro')  # Using gemini-pro instead of gemini-2.0-flash
+else:
+    print("Warning: GOOGLE_API_KEY not found in environment variables")
+    model = None
 
 def get_ndvi_ndwi(latitude, longitude):
     """Calculate NDVI and NDWI for the given location"""
@@ -79,46 +91,6 @@ def get_weather_data(latitude, longitude):
     
     return weather_data
 
-
-    """Generate crop recommendation using Gemini API"""
-    # Convert USD to INR (approximate conversion)
-    budget_inr = float(farmer_responses.get('budget', 0)) * 83
-
-    # Get the current season based on month
-    current_month = datetime.now().month
-    if 6 <= current_month <= 9:
-        season = "Kharif"
-    elif 10 <= current_month <= 2:
-        season = "Rabi"
-    else:
-        season = "Zaid"
-
-    prompt = f"""
-    Based on:
-    • Environment: NDVI={ndvi}, NDWI={ndwi}, pH={soil_ph}, Temp={weather_data.get('temperature_2m', 'N/A')}°C
-    • Rainfall: {weather_data.get('total_precipitation', 'N/A')} mm
-    • Season: {season}
-    • Farmer: {farmer_responses.get('experience')} years experience, {farmer_responses.get('landSize')} acres
-    • Irrigation: {farmer_responses.get('irrigation')}
-    • Past Crop: {farmer_responses.get('past_crop')}
-    • Budget: ₹{budget_inr:,.2f}
-    • Market: {farmer_responses.get('market')}
-
-    Provide exactly 3 crop recommendations in this format ONLY:
-
-    1. [Crop Name] - [Expected yield/acre] - [Current market rate/quintal]
-    2. [Crop Name] - [Expected yield/acre] - [Current market rate/quintal]
-    3. [Crop Name] - [Expected yield/acre] - [Current market rate/quintal]
-
-    Keep it extremely concise, one line per crop only.
-    """
-    
-    try:
-        response = model.generate_content(prompt)
-        return response.text
-    except Exception as e:
-        print(f"Error generating recommendation: {str(e)}")
-        return "Unable to generate crop recommendations at the moment. Please try again later."
 def get_crop_recommendation(ndvi, ndwi, soil_ph, weather_data, farmer_responses):
     """Generate crop recommendation using Gemini API via direct HTTP request."""
     # Convert USD to INR
