@@ -78,6 +78,67 @@
       font-size: 14px;
     }
 
+    /* Language Toggle Button */
+    .language-toggle {
+      display: flex;
+      align-items: center;
+      margin-left: 20px;
+      position: relative;
+    }
+
+    .language-toggle-switch {
+      display: inline-block;
+      position: relative;
+      width: 100px;
+      height: 34px;
+    }
+
+    .language-toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .language-toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(255, 255, 255, 0.2);
+      transition: .4s;
+      border-radius: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+
+    .language-toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 44px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 34px;
+      z-index: 1;
+    }
+
+    .language-toggle-switch input:checked + .language-toggle-slider:before {
+      transform: translateX(48px);
+    }
+
+    .language-toggle-text {
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      z-index: 2;
+    }
+    
     .hero-slider {
       width: 100%;
       position: relative;
@@ -289,6 +350,15 @@
       <a href="/height">Height Tracker</a>
       <a href="/simple_irrigation">Irrigation Predictor</a>
       <a href="/problemsSolved">Problems Solved</a>
+      <div class="language-toggle">
+        <label class="language-toggle-switch">
+          <input type="checkbox" id="languageToggle">
+          <span class="language-toggle-slider">
+            <span class="language-toggle-text" style="margin-left: 4px;">ENG</span>
+            <span class="language-toggle-text" style="margin-right: 4px;">हिंदी</span>
+          </span>
+        </label>
+      </div>
       <div class="user-profile">
         <div class="avatar">U</div>
         <!-- <div class="user-info">User Profile</div> -->
@@ -729,6 +799,270 @@
           }, 800);
         }, remainingTime);
       });
+    });
+  </script>
+
+  <!-- Language Toggle Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Language data object containing translations
+      const languageData = {
+        english: {
+          // Navbar
+          'logo': 'AgroNexus',
+          'crop_price': 'Crop Price Predictor',
+          'crop_rec': 'Crop Recommendation',
+          'disease_detection': 'Disease Detection',
+          'height_tracker': 'Height Tracker',
+          'irrigation': 'Irrigation Predictor',
+          'problems_solved': 'Problems Solved',
+          'user_profile': 'User Profile',
+          
+          // Hero Captions
+          'price_prediction_title': 'Crop Price Prediction',
+          'price_prediction_desc': 'Get accurate price forecasts for your crops based on market trends and historical data.',
+          'crop_recommendation_title': 'Crop Recommendation',
+          'crop_recommendation_desc': 'Discover the best crops to plant based on your soil conditions, climate, and location.',
+          'disease_detection_title': 'Disease Detection',
+          'disease_detection_desc': 'Identify plant diseases early with our AI-powered image recognition technology.',
+          'height_tracker_title': 'Height Tracker',
+          'height_tracker_desc': 'Monitor and track your crop growth stages to optimize harvesting time and yield.',
+          'weather_forecasting_title': 'Weather Forecasting',
+          'weather_forecasting_desc': 'Get real-time weather updates and forecasts to plan your farming activities effectively.',
+          
+          // Buttons
+          'speak_to_navigate': 'Speak to Navigate',
+          'play_welcome': 'Play Welcome Audio',
+          
+          // Voice Section
+          'voice_commands': 'Voice Commands',
+          'cmd_crop_price': '"Mujhe meri kheti ka daam janna hai"',
+          'cmd_crop_price_desc': 'Check crop prices and market trends',
+          'cmd_crop_rec': '"Mujhe fasal ka sujaav chahiye"',
+          'cmd_crop_rec_desc': 'Get personalized crop recommendations',
+          'cmd_disease': '"Mujhe fasal ki beemari jaanni hai"',
+          'cmd_disease_desc': 'Detect and identify crop diseases',
+          'cmd_height': '"Mujhe fasal ki uchai jaani hai"',
+          'cmd_height_desc': 'Track and monitor crop growth',
+          
+          // Tools Section
+          'farm_tools': 'Farm Management Tools',
+          'farm_tools_desc': 'Access powerful tools to optimize your farm operations',
+          
+          // Statistics Section
+          'today_stats': 'Today\'s Statistics',
+          'weather_data': 'Weather data for the last 5 days',
+          'temperature': 'Temperature (Last 5 Days)',
+          'humidity': 'Humidity (Last 5 Days)',
+          'rainfall': 'Rainfall (Last 5 Days)',
+          
+          // Footer
+          'footer_title': 'Kisan Smart Kheti Guide',
+          'footer_desc': 'Empowering Indian farmers with technology and innovative solutions to increase productivity, sustainability, and income.',
+          'quick_links': 'Quick Links',
+          'home': 'Home',
+          'solutions': 'Solutions',
+          'about_us': 'About Us',
+          'contact': 'Contact',
+          'privacy': 'Privacy Policy',
+          'contact_us': 'Contact Us',
+          'all_rights': 'All rights reserved.'
+        },
+        hindi: {
+          // Navbar
+          'logo': 'एग्रोनेक्सस',
+          'crop_price': 'फसल मूल्य भविष्यवाणी',
+          'crop_rec': 'फसल अनुशंसा',
+          'disease_detection': 'रोग पहचान',
+          'height_tracker': 'ऊंचाई ट्रैकर',
+          'irrigation': 'सिंचाई भविष्यवाणी',
+          'problems_solved': 'समाधान',
+          'user_profile': 'उपयोगकर्ता प्रोफाइल',
+          
+          // Hero Captions
+          'price_prediction_title': 'फसल मूल्य भविष्यवाणी',
+          'price_prediction_desc': 'बाजार रुझानों और ऐतिहासिक डेटा के आधार पर अपनी फसलों के लिए सटीक मूल्य पूर्वानुमान प्राप्त करें।',
+          'crop_recommendation_title': 'फसल अनुशंसा',
+          'crop_recommendation_desc': 'अपनी मिट्टी की स्थिति, जलवायु और स्थान के आधार पर बोने के लिए सर्वोत्तम फसलों का पता लगाएँ।',
+          'disease_detection_title': 'रोग पहचान',
+          'disease_detection_desc': 'हमारी एआई-संचालित छवि पहचान तकनीक के साथ पौधों के रोगों की जल्दी पहचान करें।',
+          'height_tracker_title': 'ऊंचाई ट्रैकर',
+          'height_tracker_desc': 'फसल की कटाई के समय और उपज को अनुकूलित करने के लिए अपनी फसल के विकास चरणों की निगरानी और ट्रैक करें।',
+          'weather_forecasting_title': 'मौसम पूर्वानुमान',
+          'weather_forecasting_desc': 'अपनी कृषि गतिविधियों की प्रभावी रूप से योजना बनाने के लिए रीयल-टाइम मौसम अपडेट और पूर्वानुमान प्राप्त करें।',
+          
+          // Buttons
+          'speak_to_navigate': 'नेविगेट करने के लिए बोलें',
+          'play_welcome': 'स्वागत ऑडियो चलाएं',
+          
+          // Voice Section
+          'voice_commands': 'आवाज़ कमांड',
+          'cmd_crop_price': '"मुझे मेरी खेती का दाम जानना है"',
+          'cmd_crop_price_desc': 'फसल की कीमतें और बाजार रुझान जांचें',
+          'cmd_crop_rec': '"मुझे फसल का सुझाव चाहिए"',
+          'cmd_crop_rec_desc': 'व्यक्तिगत फसल अनुशंसाएँ प्राप्त करें',
+          'cmd_disease': '"मुझे फसल की बीमारी जाननी है"',
+          'cmd_disease_desc': 'फसल के रोगों का पता लगाएं और पहचानें',
+          'cmd_height': '"मुझे फसल की ऊंचाई जानी है"',
+          'cmd_height_desc': 'फसल की वृद्धि को ट्रैक और मॉनिटर करें',
+          
+          // Tools Section
+          'farm_tools': 'कृषि प्रबंधन उपकरण',
+          'farm_tools_desc': 'अपने कृषि संचालन को अनुकूलित करने के लिए शक्तिशाली उपकरणों तक पहुंचें',
+          
+          // Statistics Section
+          'today_stats': 'आज के आंकड़े',
+          'weather_data': 'पिछले 5 दिनों का मौसम डेटा',
+          'temperature': 'तापमान (पिछले 5 दिन)',
+          'humidity': 'आर्द्रता (पिछले 5 दिन)',
+          'rainfall': 'वर्षा (पिछले 5 दिन)',
+          
+          // Footer
+          'footer_title': 'किसान स्मार्ट खेती गाइड',
+          'footer_desc': 'भारतीय किसानों को उत्पादकता, स्थिरता और आय बढ़ाने के लिए प्रौद्योगिकी और नवीन समाधानों के साथ सशक्त बनाना।',
+          'quick_links': 'त्वरित लिंक',
+          'home': 'होम',
+          'solutions': 'समाधान',
+          'about_us': 'हमारे बारे में',
+          'contact': 'संपर्क',
+          'privacy': 'गोपनीयता नीति',
+          'contact_us': 'हमसे संपर्क करें',
+          'all_rights': 'सर्वाधिकार सुरक्षित।'
+        }
+      };
+      
+      // Function to change language
+      function changeLanguage(language) {
+        const elements = document.querySelectorAll('[data-lang-key]');
+        
+        elements.forEach(element => {
+          const key = element.getAttribute('data-lang-key');
+          if (languageData[language][key]) {
+            if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+              element.placeholder = languageData[language][key];
+            } else {
+              element.textContent = languageData[language][key];
+            }
+          }
+        });
+        
+        // Save language preference
+        localStorage.setItem('preferredLanguage', language);
+      }
+      
+      // Add language toggle event listener
+      const languageToggle = document.getElementById('languageToggle');
+      if (languageToggle) {
+        // Set initial state based on saved preference
+        const savedLanguage = localStorage.getItem('preferredLanguage') || 'english';
+        if (savedLanguage === 'hindi') {
+          languageToggle.checked = true;
+          changeLanguage('hindi');
+        }
+        
+        // Toggle language on checkbox change
+        languageToggle.addEventListener('change', function() {
+          if (this.checked) {
+            changeLanguage('hindi');
+          } else {
+            changeLanguage('english');
+          }
+        });
+      }
+      
+      // Add data-lang-key attributes to all translatable elements on page load
+      function addLanguageAttributes() {
+        // Navbar
+        document.querySelector('.navbar .logo').setAttribute('data-lang-key', 'logo');
+        
+        const navLinks = document.querySelectorAll('.nav-links a:not(.user-profile a)');
+        navLinks[0].setAttribute('data-lang-key', 'crop_price');
+        navLinks[1].setAttribute('data-lang-key', 'crop_rec');
+        navLinks[2].setAttribute('data-lang-key', 'disease_detection');
+        navLinks[3].setAttribute('data-lang-key', 'height_tracker');
+        navLinks[4].setAttribute('data-lang-key', 'irrigation');
+        navLinks[5].setAttribute('data-lang-key', 'problems_solved');
+        
+        document.querySelector('.user-profile a').setAttribute('data-lang-key', 'user_profile');
+        
+        // Hero captions
+        const heroCaptionTitles = document.querySelectorAll('.hero-caption-title');
+        const heroCaptionDescs = document.querySelectorAll('.hero-caption-desc');
+        
+        const captionTitleKeys = ['price_prediction_title', 'crop_recommendation_title', 'disease_detection_title', 'height_tracker_title', 'weather_forecasting_title'];
+        const captionDescKeys = ['price_prediction_desc', 'crop_recommendation_desc', 'disease_detection_desc', 'height_tracker_desc', 'weather_forecasting_desc'];
+        
+        heroCaptionTitles.forEach((title, index) => {
+          if (index < captionTitleKeys.length) {
+            title.setAttribute('data-lang-key', captionTitleKeys[index]);
+          }
+        });
+        
+        heroCaptionDescs.forEach((desc, index) => {
+          if (index < captionDescKeys.length) {
+            desc.setAttribute('data-lang-key', captionDescKeys[index]);
+          }
+        });
+        
+        // Mic buttons
+        document.getElementById('micButton').setAttribute('data-lang-key', 'speak_to_navigate');
+        document.getElementById('audioButton').setAttribute('data-lang-key', 'play_welcome');
+        
+        // Voice commands section
+        document.querySelector('.voice-guidelines h3').setAttribute('data-lang-key', 'voice_commands');
+        
+        const commandTexts = document.querySelectorAll('.command-text');
+        commandTexts[0].setAttribute('data-lang-key', 'cmd_crop_price');
+        commandTexts[1].setAttribute('data-lang-key', 'cmd_crop_rec');
+        commandTexts[2].setAttribute('data-lang-key', 'cmd_disease');
+        commandTexts[3].setAttribute('data-lang-key', 'cmd_height');
+        
+        const commandDescs = document.querySelectorAll('.command-description');
+        commandDescs[0].setAttribute('data-lang-key', 'cmd_crop_price_desc');
+        commandDescs[1].setAttribute('data-lang-key', 'cmd_crop_rec_desc');
+        commandDescs[2].setAttribute('data-lang-key', 'cmd_disease_desc');
+        commandDescs[3].setAttribute('data-lang-key', 'cmd_height_desc');
+        
+        // Farm tools section
+        document.querySelector('.card-header h2').setAttribute('data-lang-key', 'farm_tools');
+        document.querySelector('.card-header p').setAttribute('data-lang-key', 'farm_tools_desc');
+        
+        const toolButtons = document.querySelectorAll('.tool-button span');
+        toolButtons[0].setAttribute('data-lang-key', 'crop_price');
+        toolButtons[1].setAttribute('data-lang-key', 'crop_rec');
+        toolButtons[2].setAttribute('data-lang-key', 'disease_detection');
+        toolButtons[3].setAttribute('data-lang-key', 'height_tracker');
+        
+        // Statistics section
+        document.querySelector('.statistics-section h2').setAttribute('data-lang-key', 'today_stats');
+        document.querySelector('.statistics-section > p').setAttribute('data-lang-key', 'weather_data');
+        
+        const chartTitles = document.querySelectorAll('.chart-box h3');
+        chartTitles[0].setAttribute('data-lang-key', 'temperature');
+        chartTitles[1].setAttribute('data-lang-key', 'humidity');
+        chartTitles[2].setAttribute('data-lang-key', 'rainfall');
+        
+        // Footer
+        document.querySelector('.footer-info h3').setAttribute('data-lang-key', 'footer_title');
+        document.querySelector('.footer-info p').setAttribute('data-lang-key', 'footer_desc');
+        document.querySelector('.footer-links h4').setAttribute('data-lang-key', 'quick_links');
+        
+        const footerLinks = document.querySelectorAll('.footer-links ul li a');
+        footerLinks[0].setAttribute('data-lang-key', 'home');
+        footerLinks[1].setAttribute('data-lang-key', 'solutions');
+        footerLinks[2].setAttribute('data-lang-key', 'about_us');
+        footerLinks[3].setAttribute('data-lang-key', 'contact');
+        footerLinks[4].setAttribute('data-lang-key', 'privacy');
+        
+        document.querySelector('.footer-contact h4').setAttribute('data-lang-key', 'contact_us');
+      }
+      
+      // Add language attributes when DOM is loaded
+      addLanguageAttributes();
+      
+      // Apply saved language preference
+      const savedLanguage = localStorage.getItem('preferredLanguage') || 'english';
+      changeLanguage(savedLanguage);
     });
   </script>
 
