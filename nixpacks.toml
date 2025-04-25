@@ -1,29 +1,13 @@
 [phases.setup]
 nixPkgs = [
   "python310Full",
-  "python310Packages.flask",
-  "python310Packages.pymongo",
-  "python310Packages.python-dotenv",
-  "python310Packages.requests",
-  "python310Packages.werkzeug",
-  "python310Packages.flask-cors",
-  "python310Packages.pillow",
-  "python310Packages.numpy",
-  "python310Packages.matplotlib",
-  "python310Packages.scikit-image",
-  "python310Packages.pandas",
-  "python310Packages.gunicorn",
-  "python310Packages.scikit-learn"
+  "python310Packages.pip"
 ]
 
 [phases.install]
 cmds = [
-  "pip install torch torchvision",
-  "pip install cloudinary",
-  "pip install earthengine-api",
-  "pip install google-generativeai",
-  "pip install opencv-python",
-  "pip install -r requirements.txt"
+  "pip install --no-cache-dir -U pip",
+  "pip install --no-cache-dir -r requirements.txt"
 ]
 
 [start]
