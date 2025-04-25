@@ -5,7 +5,8 @@ nixPkgs = ["python310Full", "python310Packages.pip"]
 cmds = [
   "python3 -m venv /app/venv",
   "/app/venv/bin/pip install --upgrade pip",
-  "/app/venv/bin/pip install -r requirements.txt"
+  "/app/venv/bin/pip install -r requirements.txt",
+  "/app/venv/bin/pip list"  # <- new line to confirm Flask is installed
 ]
 
 [start]
