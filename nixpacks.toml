@@ -1,2 +1,8 @@
 [phases.setup]
-nixPkgs = ["libGL", "pkg-config"]
+nixPkgs = ["python310", "libGL", "pkg-config", "glib", "libxkbcommon", "mesa", "xorg.libX11", "xorg.libXext", "xorg.libXrender"]
+
+[phases.install]
+cmds = ["pip install --upgrade pip", "pip install -r requirements.txt"]
+
+[start]
+cmd = "gunicorn app:app --bind 0.0.0.0:$PORT"
