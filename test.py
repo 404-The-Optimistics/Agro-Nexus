@@ -153,6 +153,9 @@ def get_crop_recommendation(ndvi, ndwi, soil_ph, weather_data, farmer_responses)
     except Exception as e:
         print(f"Exception while calling Gemini API: {str(e)}")
         return "Unable to generate crop recommendations at the moment. Please try again later."
+@bp2.route('/track')
+def track():
+    return render_template('track.html')
 
 @bp2.route('/crop_rec')
 def index():
