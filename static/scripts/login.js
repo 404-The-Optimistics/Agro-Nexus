@@ -163,3 +163,4 @@ document.addEventListener('DOMContentLoaded', function() {
         dots[currentDot].classList.add('active');
     }, 3000);
 });
+//dummy content
