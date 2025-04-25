@@ -31,6 +31,7 @@ import ee
 import google.generativeai as genai
 import os
 from datetime import datetime, timedelta
+from utils.captcha import verify_captcha
 
 load_dotenv()
 
@@ -247,6 +248,10 @@ def signup():
     try:
         data = request.get_json()
         
+        # Verify CAPTCHA
+        if not verify_captcha(data.get('captcha')):
+            return jsonify({'error': 'Invalid CAPTCHA verification'}), 400
+        
         # Validate required fields
         required_fields = ['firstName', 'city', 'email', 'password']
         for field in required_fields:
@@ -289,6 +294,10 @@ def signup():
 def login():
     try:
         data = request.get_json()
+        
+        # Verify CAPTCHA
+        if not verify_captcha(data.get('captcha')):
+            return jsonify({'error': 'Invalid CAPTCHA verification'}), 400
         
         # Validate required fields
         if not data.get('email') or not data.get('password'):
