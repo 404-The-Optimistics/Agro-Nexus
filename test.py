@@ -7,17 +7,29 @@ import requests
 
 bp2 = Blueprint('bp2', __name__)
 
-
 # Initialize Google Earth Engine
 try:
-    ee.Initialize(project='agronexus-457107')
+    # Try to use service account credentials if available
+    if os.getenv('GOOGLE_APPLICATION_CREDENTIALS'):
+        credentials = ee.ServiceAccountCredentials(
+            email=os.getenv('EE_SERVICE_ACCOUNT'),
+            key_file=os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+        )
+        ee.Initialize(credentials, project='agronexus-457107')
+    else:
+        # Fallback to default initialization
+        ee.Initialize(project='agronexus-457107')
 except Exception as e:
-    print("Please authenticate Google Earth Engine first")
+    print(f"Earth Engine initialization error: {str(e)}")
 
 # Configure Gemini API
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
-genai.configure(api_key=GOOGLE_API_KEY)
-model = genai.GenerativeModel('gemini-2.0-flash')
+if GOOGLE_API_KEY:
+    genai.configure(api_key=GOOGLE_API_KEY)
+    model = genai.GenerativeModel('gemini-pro')  # Using gemini-pro instead of gemini-2.0-flash
+else:
+    print("Warning: GOOGLE_API_KEY not found in environment variables")
+    model = None
 
 def get_ndvi_ndwi(latitude, longitude):
     """Calculate NDVI and NDWI for the given location"""
@@ -81,10 +93,10 @@ def get_weather_data(latitude, longitude):
 
 def get_crop_recommendation(ndvi, ndwi, soil_ph, weather_data, farmer_responses):
     """Generate crop recommendation using Gemini API via direct HTTP request."""
-    # Convert USD to INR (approximate conversion)
+    # Convert USD to INR
     budget_inr = float(farmer_responses.get('budget', 0)) * 83
 
-    # Get the current season based on month
+    # Get current season
     current_month = datetime.now().month
     if 6 <= current_month <= 9:
         season = "Kharif"
@@ -112,18 +124,10 @@ def get_crop_recommendation(ndvi, ndwi, soil_ph, weather_data, farmer_responses)
 
     Keep it extremely concise, one line per crop only.
     """
-    
-    headers = {
-        "Content-Type": "application/json",
-    }
-    
-    # Set the Gemini API URL (v1beta)
-    api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
-    
-    # Add your API key from the environment variable
-    api_key = os.getenv('GOOGLE_API_KEY')
 
-    # Define request payload
+    headers = {"Content-Type": "application/json"}
+    api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    api_key = os.getenv("GOOGLE_API_KEY")
     payload = {
         "contents": [{
             "parts": [{"text": prompt}]
@@ -131,59 +135,27 @@ def get_crop_recommendation(ndvi, ndwi, soil_ph, weather_data, farmer_responses)
     }
 
     try:
-        # Send the POST request to Gemini API
         response = requests.post(api_url, headers=headers, json=payload, params={"key": api_key})
+        print(f"Gemini API response status: {response.status_code}")
+        print(f"Gemini API raw response: {response.text}")
 
-        # Check if the response is successful
         if response.status_code == 200:
-            # Extract the response text (crop recommendations)
             result = response.json()
-            return result['content'][0]['parts'][0]['text']
+            # Try-safe extraction
+            candidates = result.get("candidates")
+            if candidates and "content" in candidates[0] and "parts" in candidates[0]["content"]:
+                return candidates[0]["content"]["parts"][0].get("text", "No text found.")
+            else:
+                return "Received an unexpected response format from Gemini API."
         else:
-            print(f"Error with Gemini API: {response.status_code}, {response.text}")
-            return "Unable to generate crop recommendations at the moment. Please try again later."
-    
+            return f"Gemini API error: {response.status_code} - {response.text}"
+
     except Exception as e:
-        print(f"Error generating recommendation: {str(e)}")
-        return "Unable to generate crop recommendations at the moment. Please try again later."    """Generate crop recommendation using Gemini API"""
-    # Convert USD to INR (approximate conversion)
-    budget_inr = float(farmer_responses.get('budget', 0)) * 83
-
-    # Get the current season based on month
-    current_month = datetime.now().month
-    if 6 <= current_month <= 9:
-        season = "Kharif"
-    elif 10 <= current_month <= 2:
-        season = "Rabi"
-    else:
-        season = "Zaid"
-
-    prompt = f"""
-    Based on:
-    • Environment: NDVI={ndvi}, NDWI={ndwi}, pH={soil_ph}, Temp={weather_data.get('temperature_2m', 'N/A')}°C
-    • Rainfall: {weather_data.get('total_precipitation', 'N/A')} mm
-    • Season: {season}
-    • Farmer: {farmer_responses.get('experience')} years experience, {farmer_responses.get('landSize')} acres
-    • Irrigation: {farmer_responses.get('irrigation')}
-    • Past Crop: {farmer_responses.get('past_crop')}
-    • Budget: ₹{budget_inr:,.2f}
-    • Market: {farmer_responses.get('market')}
-
-    Provide exactly 3 crop recommendations in this format ONLY:
-
-    1. [Crop Name] - [Expected yield/acre] - [Current market rate/quintal]
-    2. [Crop Name] - [Expected yield/acre] - [Current market rate/quintal]
-    3. [Crop Name] - [Expected yield/acre] - [Current market rate/quintal]
-
-    Keep it extremely concise, one line per crop only.
-    """
-    
-    try:
-        response = model.generate_content(prompt)
-        return response.text
-    except Exception as e:
-        print(f"Error generating recommendation: {str(e)}")
+        print(f"Exception while calling Gemini API: {str(e)}")
         return "Unable to generate crop recommendations at the moment. Please try again later."
+@bp2.route('/track')
+def track():
+    return render_template('track.html')
 
 @bp2.route('/crop_rec')
 def index():

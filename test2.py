@@ -242,9 +242,6 @@ def login_page():
 @bp1.route('/home')
 def home_page():
     return render_template('home.html')
-@bp1.route('/irrigation')
-def irrigation_page():
-    return render_template('irrigation.html')
 # API Routes
 @bp1.route('/api/signup', methods=['POST'])
 def signup():
