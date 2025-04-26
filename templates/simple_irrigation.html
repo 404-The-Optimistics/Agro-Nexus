@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Irrigation Prediction</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
+        /* Your existing CSS styles here */
         :root {
             --dark-green: #1E2A22;
             --medium-green: #354C39;
@@ -18,259 +21,246 @@
             --input-border: rgba(138, 154, 91, 0.3);
         }
 
-        /* Navbar styling */
+        /* Simple styling to ensure everything is visible */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--medium-green) 0%, var(--dark-green) 100%);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 2rem;
+        }
+
         .navbar {
-            background: linear-gradient(to right, #2D3A24, #1A2212);
+            background-color: var(--dark-green);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px var(--shadow-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 28px;
-            height: 90px;
-            box-shadow: 0 3px 12px var(--shadow-color);
-            width: 100%;
-            box-sizing: border-box;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(138, 154, 91, 0.2);
+            margin-bottom: 2rem;
         }
-        
-        .navbar .logo {
-            font-size: 30px;
+
+        .logo {
+            font-size: 1.8rem;
             font-weight: bold;
             color: var(--accent);
             text-decoration: none;
-            margin-left: 40px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
         }
-        
-        .navbar .logo:hover {
-            color: #E0E6D4;
-            transform: scale(1.02);
-        }
-        
-        .navbar .nav-links {
+
+        .nav-links {
             display: flex;
-            gap: 20px;
-            align-items: center;
+            gap: 1.5rem;
         }
-        
-        .navbar .nav-links a {
+
+        .nav-links a {
             color: var(--text);
             text-decoration: none;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            padding: 8px 16px;
-            border-radius: 8px;
-            position: relative;
             font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-        
-        .navbar .nav-links a:hover {
-            color: var(--accent);
-            background-color: rgba(0, 0, 0, 0.25);
-            transform: translateY(-2px);
-        }
-        
-        .navbar .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background-color: var(--accent);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-        
-        .navbar .nav-links a:hover::after {
-            width: 60%;
         }
 
-        @media (max-width: 900px) {
-            .navbar {
-                padding: 0 20px;
-            }
-            .navbar .logo {
-                margin-left: 20px;
-                font-size: 26px;
-            }
-            .navbar .nav-links {
-                gap: 15px;
-            }
-            .navbar .nav-links a {
-                font-size: 16px;
-                padding: 6px 12px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                height: auto;
-                padding: 15px;
-                position: relative;
-            }
-            .navbar .logo {
-                margin: 0 0 15px 0;
-            }
-            .navbar .nav-links {
-                flex-direction: column;
-                width: 100%;
-                gap: 10px;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .navbar .nav-links a {
-                font-size: 14px;
-                padding: 5px 10px;
-            }
-        }
-
-        /* Existing styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 90px 20px 20px;
-            background-color: #f5f5f5;
-        }
         .container {
-            max-width: 800px;
+            max-width: 1100px;
             margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
         }
-        h1, h2 {
-            color: #2D3A24;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #5D6E49;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #4A5739;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #E0E6D4;
-            border-radius: 4px;
-            display: none;
-        }
-        .loading {
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--accent);
             text-align: center;
-            margin: 20px 0;
-            display: none;
         }
-        .real-time-data {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #F0F4E8;
-            border-radius: 4px;
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 1.5rem 0 1rem;
+            color: var(--accent);
         }
-        .data-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-        }
-        .data-item {
-            padding: 10px;
-            background-color: white;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
+
         .location-info {
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #E0E6D4;
-            border-radius: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: var(--form-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 12px var(--shadow-color);
         }
-        .location-button {
-            background-color: #5D6E49;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .location-button:hover {
-            background-color: #4A5739;
-        }
+
         .location-details {
-            font-size: 14px;
+            font-size: 1.1rem;
         }
+
+        .location-button, button[type="submit"] {
+            background-color: var(--accent);
+            color: var(--dark-green);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 3px 5px var(--shadow-color);
+        }
+
+        .real-time-data {
+            background-color: var(--form-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 12px var(--shadow-color);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .data-item {
+            padding: 1rem;
+            background-color: var(--input-bg);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .data-source {
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 0.3rem;
+        }
+
+        .data-note {
+            margin-top: 1rem;
+            padding: 0.7rem;
+            background-color: rgba(138, 154, 91, 0.15);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent);
+        }
+
+        form {
+            background-color: var(--form-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 12px var(--shadow-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 6px;
+            border: 1px solid var(--input-border);
+            background-color: var(--input-bg);
+            color: var(--text);
+            font-size: 1rem;
+        }
+
         .hidden {
             display: none;
         }
-        .data-source {
-            display: block;
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--form-bg);
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 12px var(--shadow-color);
         }
-        .data-note {
-            font-size: 12px;
-            color: #666;
-            font-style: italic;
+
+        .loading p {
+            margin-bottom: 1rem;
+        }
+
+        .result {
+            display: none;
+            background-color: var(--form-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 15px var(--shadow-color);
+        }
+
+        .result h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+        /* Loading animation styles */
+        .loading::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--input-border);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            margin: 0 auto;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="navbar">
         <a href="#" class="logo">AgroNexus</a>
         <div class="nav-links">
-          <a href="/predict_price">Crop Price Predictor</a>
-          <a href="/crop_rec">Crop Recommendation</a>
-          <a href="/submit">Disease Detection</a>
-          <a href="/height">Height Tracker</a>
-          <a href="/simple_irrigation">Irrigation Predictor</a>
-          <a href="/problems_solved">Problems Solved</a>
+            <a href="/predict_price">Crop Price Predictor</a>
+            <a href="/crop_rec">Crop Recommendation</a>
+            <a href="/submit">Disease Detection</a>
+            <a href="/height">Height Tracker</a>
+            <a href="/irrigation">Irrigation Predictor</a>
+            <a href="/problems_solved">Problems Solved</a>
         </div>
     </div>
     <div class="container">
         <h1>Irrigation Prediction</h1>
-        
+
         <!-- Location Information -->
         <div class="location-info">
             <div class="location-details">
                 <strong>Location:</strong> <span id="location-text">Not detected</span>
-                <span id="coordinates-text" class="hidden">(<span id="latitude">0</span>, <span id="longitude">0</span>)</span>
+                <span id="coordinates-text" class="hidden">(<span id="latitude">0</span>, <span
+                        id="longitude">0</span>)</span>
             </div>
-            <button id="get-location" class="location-button">Use My Location</button>
+            <div class="buttons-container">
+                <button id="get-location" class="location-button">Use My Location</button>
+                <button id="refresh-data" class="location-button" style="margin-left: 10px;">Refresh Data</button>
+            </div>
         </div>
-        
+
         <!-- Real-time Data Display -->
         <div class="real-time-data">
             <h2>Real-time Environmental Data</h2>
@@ -295,28 +285,10 @@
                     <strong>Last Updated:</strong> <span id="data-timestamp">Loading...</span>
                 </div>
             </div>
+            <div id="data-note" class="data-note" style="display: none;"></div>
         </div>
-        
+
         <form id="irrigationForm">
-            <h2>Soil Parameters</h2>
-            <div class="form-group">
-                <label for="soil_type">Soil Type</label>
-                <select id="soil_type" name="soil_type" required>
-                    <option value="" disabled selected>Select soil type</option>
-                    <option value="clay">Clay</option>
-                    <option value="sandy">Sandy</option>
-                    <option value="loamy">Loamy</option>
-                    <option value="silt">Silt</option>
-                    <option value="black">Black</option>
-                    <option value="red">Red</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="moisture">Soil Moisture (%)</label>
-                <input type="range" id="moisture" name="moisture" min="0" max="100" value="50" required>
-                <span id="moisture-value">50%</span>
-            </div>
-            
             <h2>Crop Information</h2>
             <div class="form-group">
                 <label for="crop_type">Crop Type</label>
@@ -346,46 +318,46 @@
                     <option value="harvesting">Harvesting</option>
                 </select>
             </div>
-            
-            <h2>Environmental Factors</h2>
             <div class="form-group">
-                <label for="temperature">Temperature (°C)</label>
-                <input type="number" id="temperature" name="temperature" min="0" max="50" step="0.1" required>
+                <label for="soil_moisture">Soil Moisture (%)</label>
+                <input type="number" id="soil_moisture" name="soil_moisture" min="0" max="100" required
+                    value="{{ moisture_data }}">
             </div>
-            <div class="form-group">
-                <label for="rainfall">Expected Rainfall (mm)</label>
-                <input type="number" id="rainfall" name="rainfall" min="0" max="1000" step="0.1" required>
-            </div>
-            
+
             <button type="submit">Predict Irrigation Needs</button>
         </form>
-        
+
         <div class="loading" id="loading-indicator">
             <p>Analyzing data and generating prediction...</p>
         </div>
-        
+
         <div class="result" id="result-container">
-            <h2>Irrigation Recommendation</h2>
-            <p><strong>Amount:</strong> <span id="irrigation-value">0</span> mm</p>
-            <p><strong>Frequency:</strong> <span id="frequency-value">Every 3-5 days</span></p>
-            <p><strong>Best Time:</strong> <span id="time-value">Early morning or evening</span></p>
-            <p><strong>Method:</strong> <span id="method-value">Drip irrigation</span></p>
-            <h3>Explanation</h3>
-            <p id="explanation-text">The recommendation is based on the soil type, crop requirements, and environmental conditions.</p>
+            <!-- Prediction results will appear here -->
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Simple GSAP animation for page load
+            gsap.from(".container", {
+                opacity: 0,
+                duration: 1,
+                ease: "power2.inOut"
+            });
+
             // Location handling
             const getLocationButton = document.getElementById('get-location');
+            const refreshButton = document.getElementById('refresh-data');
             const locationText = document.getElementById('location-text');
             const coordinatesText = document.getElementById('coordinates-text');
             const latitudeSpan = document.getElementById('latitude');
             const longitudeSpan = document.getElementById('longitude');
             let userLatitude = null;
             let userLongitude = null;
-            
+
+            // Get soil moisture input element
+            const soilMoistureInput = document.getElementById('soil_moisture');
+
             getLocationButton.addEventListener('click', () => {
                 if (navigator.geolocation) {
                     getLocationButton.textContent = 'Getting Location...';
@@ -393,19 +365,19 @@
                         (position) => {
                             userLatitude = position.coords.latitude;
                             userLongitude = position.coords.longitude;
-                            
+
                             // Update UI
                             latitudeSpan.textContent = userLatitude.toFixed(6);
                             longitudeSpan.textContent = userLongitude.toFixed(6);
                             coordinatesText.classList.remove('hidden');
-                            
+
                             // Get location name using reverse geocoding
                             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${userLatitude}&lon=${userLongitude}`)
                                 .then(response => response.json())
                                 .then(data => {
                                     locationText.textContent = data.display_name || 'Location detected';
                                     getLocationButton.textContent = 'Update Location';
-                                    
+
                                     // Update weather data with new coordinates
                                     updateRealTimeData();
                                 })
@@ -413,7 +385,7 @@
                                     console.error('Error getting location name:', error);
                                     locationText.textContent = 'Location detected';
                                     getLocationButton.textContent = 'Update Location';
-                                    
+
                                     // Update weather data with new coordinates
                                     updateRealTimeData();
                                 });
@@ -434,90 +406,78 @@
                     getLocationButton.textContent = 'Not Available';
                 }
             });
-            
-            // Soil Moisture Slider
-            const moistureInput = document.getElementById('moisture');
-            const moistureValue = document.getElementById('moisture-value');
-
-            moistureInput.addEventListener('input', (e) => {
-                const value = parseFloat(moistureInput.value);
-                moistureValue.textContent = `${value}%`;
-            });
 
             // Form Submission
             const form = document.getElementById('irrigationForm');
             const resultContainer = document.getElementById('result-container');
             const loadingIndicator = document.getElementById('loading-indicator');
-            
+
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
+
                 // Show loading indicator
                 loadingIndicator.style.display = 'block';
                 resultContainer.style.display = 'none';
-                
+
                 try {
-                    // Get form values
+                    // Get form data
                     const formData = new FormData(form);
-                    
-                    // Add location data if available
-                    if (userLatitude && userLongitude) {
-                        formData.append('latitude', userLatitude);
-                        formData.append('longitude', userLongitude);
+
+                    // Add environmental data from the UI
+                    const environmentalData = {
+                        temperature: document.getElementById('current-temperature').textContent.replace('°C', '').trim(),
+                        rainfall: document.getElementById('current-rainfall').textContent.replace('mm', '').trim(),
+                        humidity: document.getElementById('current-humidity').textContent.replace('%', '').trim(),
+                        soil_type: document.getElementById('current-soil-type').textContent,
+                        latitude: userLatitude,
+                        longitude: userLongitude
+                    };
+
+                    // Add environmental data to form data
+                    for (const [key, value] of Object.entries(environmentalData)) {
+                        if (value !== 'Loading...') {
+                            formData.append(key, value);
+                        }
                     }
-                    
-                    // Validate form data
-                    const soilType = formData.get('soil_type');
-                    const moisture = formData.get('moisture');
-                    const cropType = formData.get('crop_type');
-                    const growthStage = formData.get('growth_stage');
-                    const temperature = formData.get('temperature');
-                    const rainfall = formData.get('rainfall');
-                    
-                    if (!soilType || !moisture || !cropType || !growthStage || !temperature || !rainfall) {
-                        throw new Error('Please fill in all required fields');
-                    }
-                    
-                    // Send data to the server
+
+                    // Send data to the backend
                     const response = await fetch('/predict', {
                         method: 'POST',
                         body: formData
                     });
-                    
-                    const result = await response.json();
-                    
+
+                    // Check if the response is OK
                     if (!response.ok) {
-                        throw new Error(result.error || `Server responded with status: ${response.status}`);
+                        throw new Error(`Server responded with status: ${response.status}`);
                     }
-                    
-                    // Display results
-                    document.getElementById('irrigation-value').textContent = result.amount;
-                    document.getElementById('frequency-value').textContent = result.frequency;
-                    document.getElementById('time-value').textContent = result.best_time;
-                    document.getElementById('method-value').textContent = result.method;
-                    document.getElementById('explanation-text').textContent = result.explanation;
-                    
-                    // Update temperature source if available
-                    if (result.source) {
-                        document.getElementById('temperature-source').textContent = `Source: ${result.source}`;
+
+                    // Get the JSON result
+                    const result = await response.json();
+
+                    // Display the irrigation schedule
+                    if (result.schedule) {
+                        resultContainer.innerHTML = `<h3>Irrigation Schedule:</h3><p>${result.schedule.replace(/\n/g, "<br>")}</p>`;
+                        resultContainer.style.display = 'block';
+                    } else {
+                        resultContainer.innerHTML = `<p class="error">Error: No schedule found. Please try again later.</p>`;
+                        resultContainer.style.display = 'block';
                     }
-                    
-                    // Show result container
-                    resultContainer.style.display = 'block';
+
                 } catch (error) {
                     console.error('Error:', error);
-                    alert(`An error occurred: ${error.message}`);
+                    resultContainer.innerHTML = `<p class="error">An error occurred: ${error.message}. Please try again.</p>`;
+                    resultContainer.style.display = 'block';
                 } finally {
                     // Hide loading indicator
                     loadingIndicator.style.display = 'none';
                 }
             });
-            
-            // Fetch real-time data
+
+            // Fetch real-time data function
             async function updateRealTimeData() {
                 try {
                     let url = '/real-time-data';
-                    
+
                     // Add location parameters if available
                     if (userLatitude && userLongitude) {
                         url += `?latitude=${userLatitude}&longitude=${userLongitude}`;
@@ -525,54 +485,78 @@
                     } else {
                         console.log('No location provided, using default data');
                     }
-                    
+
                     const response = await fetch(url);
                     if (!response.ok) {
                         throw new Error(`Server responded with status: ${response.status}`);
                     }
-                    
+
                     const data = await response.json();
                     console.log('Received weather data:', data);
-                    
+
                     // Update the UI with real-time data
                     document.getElementById('current-temperature').textContent = `${data.temperature}°C`;
                     document.getElementById('current-humidity').textContent = `${data.humidity}%`;
                     document.getElementById('current-wind-speed').textContent = `${data.wind_speed} m/s`;
                     document.getElementById('current-rainfall').textContent = `${data.rainfall} mm`;
-                    document.getElementById('current-soil-type').textContent = data.soil_type;
-                    
+                    document.getElementById('current-soil-type').textContent = data.soil_type || 'Unknown';
+
                     // Update timestamp
                     if (data.timestamp) {
                         document.getElementById('data-timestamp').textContent = data.timestamp;
+                    } else {
+                        document.getElementById('data-timestamp').textContent = new Date().toLocaleString();
                     }
-                    
-                    // Update data source
+
+                    // Update data source and notes
                     const sourceElement = document.getElementById('temperature-source');
+                    const noteElement = document.getElementById('data-note');
+
                     if (data.source) {
                         sourceElement.textContent = `Source: ${data.source}`;
-                    } else if (data.note) {
-                        sourceElement.textContent = data.note;
                     } else {
                         sourceElement.textContent = '';
                     }
-                    
-                    // Update the form inputs with real-time data
-                    document.getElementById('temperature').value = data.temperature;
-                    
+
+                    if (data.note) {
+                        noteElement.textContent = data.note;
+                        noteElement.style.display = 'block';
+                    } else {
+                        noteElement.style.display = 'none';
+                    }
+
+                    // Update the soil moisture input with the real-time moisture value if available
+                    if (data.moisture && data.moisture !== 'No Data Right Now') {
+                        soilMoistureInput.value = parseFloat(data.moisture);
+                    }
+
                     // Log the data for debugging
                     console.log('Real-time data updated:', data);
                 } catch (error) {
                     console.error('Error fetching real-time data:', error);
-                    alert('Failed to fetch real-time weather data. Please try again later.');
+
+                    // Update UI to show error
+                    document.getElementById('current-temperature').textContent = "Error";
+                    document.getElementById('current-humidity').textContent = "Error";
+                    document.getElementById('current-wind-speed').textContent = "Error";
+                    document.getElementById('current-rainfall').textContent = "Error";
+                    document.getElementById('current-soil-type').textContent = "Error";
+                    document.getElementById('data-timestamp').textContent = new Date().toLocaleString();
+                    document.getElementById('data-note').textContent = `Failed to fetch data: ${error.message}`;
+                    document.getElementById('data-note').style.display = 'block';
                 }
             }
-            
+
             // Update real-time data on page load
             updateRealTimeData();
-            
+
             // Set up periodic updates for real-time data (every 5 minutes)
             setInterval(updateRealTimeData, 5 * 60 * 1000);
+
+            // Add refresh button event
+            refreshButton.addEventListener('click', updateRealTimeData);
         });
     </script>
 </body>
-</html> 
+
+</html>
