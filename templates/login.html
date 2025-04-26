@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agro Nexus - Sign In</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/login.css') }}">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="login-container">
@@ -38,6 +39,8 @@
                 <input type="checkbox" id="remember">
                 <label for="remember">Remember me</label>
             </div>
+            
+            <div class="g-recaptcha" data-sitekey="6Ld_kyQrAAAAAGJe-Aly5JQcI4hNf3OD4eFuXBpR" style="margin-bottom: 20px;"></div>
             
             <button class="btn" id="signInBtn">Sign In</button>
             

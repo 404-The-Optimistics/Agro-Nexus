@@ -31,6 +31,7 @@ import ee
 import google.generativeai as genai
 import os
 from datetime import datetime, timedelta
+from utils.captcha import verify_captcha
 
 load_dotenv()
 
@@ -241,14 +242,15 @@ def login_page():
 @bp1.route('/home')
 def home_page():
     return render_template('home.html')
-@bp1.route('/irrigation')
-def irrigation_page():
-    return render_template('irrigation.html')
 # API Routes
 @bp1.route('/api/signup', methods=['POST'])
 def signup():
     try:
         data = request.get_json()
+        
+        # Verify CAPTCHA
+        if not verify_captcha(data.get('captcha')):
+            return jsonify({'error': 'Invalid CAPTCHA verification'}), 400
         
         # Validate required fields
         required_fields = ['firstName', 'city', 'email', 'password']
@@ -292,6 +294,10 @@ def signup():
 def login():
     try:
         data = request.get_json()
+        
+        # Verify CAPTCHA
+        if not verify_captcha(data.get('captcha')):
+            return jsonify({'error': 'Invalid CAPTCHA verification'}), 400
         
         # Validate required fields
         if not data.get('email') or not data.get('password'):

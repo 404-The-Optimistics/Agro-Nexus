@@ -1,11 +1,47 @@
-# Ignore virtual environments
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+myenv/
 tf-env/
 tf-env310/
-myenv/
-venv/
-env
 
-# Ignore .env file (if using it for sensitive data)
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
 
+# Logs
+*.log
 
-__pycache__
+# Local development
+instance/
+.webassets-cache
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Model files and datasets (if they're too large)
+# Uncomment if you don't want to track these
+# models/*.pkl
+# datasets/*.csv

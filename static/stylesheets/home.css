@@ -466,3 +466,313 @@
   text-align: center;
   opacity: 0.7;
 }
+
+/* trial */
+/* Enhanced Statistics Section Styling */
+.statistics-section {
+  background: linear-gradient(145deg, rgba(229, 233, 220, 0.95), rgba(242, 243, 235, 0.95));
+  backdrop-filter: blur(8px);
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(178, 172, 136, 0.3);
+  padding: 1.75rem;
+  transition: all 0.3s;
+  margin-top: 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.statistics-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #5d6e49, #9A9575, #5d6e49);
+  border-radius: 4px 4px 0 0;
+}
+
+.statistics-section:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px);
+}
+
+.statistics-section h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #28331a;
+  margin-bottom: 0.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.statistics-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background-color: #6A762A;
+}
+
+.statistics-section p {
+  color: #5d6e49;
+  margin-bottom: 1.75rem;
+  font-style: italic;
+}
+
+/* Enhanced Chart Box Styling */
+.chart-box {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(242, 245, 235, 0.9));
+  border-radius: 0.6rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(178, 172, 136, 0.25);
+  box-shadow: 0 3px 8px rgba(106, 118, 42, 0.08);
+  transition: all 0.3s ease;
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235d6e49' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.chart-box:hover {
+  box-shadow: 0 5px 15px rgba(106, 118, 42, 0.12);
+  transform: translateY(-2px);
+}
+
+.chart-box h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  color: #4A5D32;
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 5px 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.chart-box canvas {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Chart types with specific colors */
+.chart-box:nth-child(1) {
+  border-left: 4px solid #5d6e49; /* Temperature - green */
+}
+
+.chart-box:nth-child(2) {
+  border-left: 4px solid #7A8834; /* Humidity - lighter green */
+}
+
+.chart-box:nth-child(3) {
+  border-left: 4px solid #28331a; /* Rainfall - darker green */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chart-box {
+    height: 250px;
+  }
+  
+  .chart-box h3 {
+    font-size: 1rem;
+  }
+}
+
+/* trial part2 */
+/* Enhanced Farm Tools Card Styling */
+.farm-tools-card {
+  background: linear-gradient(145deg, rgba(229, 233, 220, 0.95), rgba(242, 243, 235, 0.95));
+  backdrop-filter: blur(8px);
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(178, 172, 136, 0.3);
+  margin-bottom: 2.5rem;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.farm-tools-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #5d6e49, #9A9575, #5d6e49);
+  border-radius: 4px 4px 0 0;
+}
+
+.farm-tools-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235d6e49' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.farm-tools-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px);
+}
+
+.card-header {
+  padding: 1.75rem 1.75rem 0.75rem 1.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.card-header h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #28331a;
+  margin-bottom: 0.75rem;
+  position: relative;
+  display: inline-block;
+}
+
+.card-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background-color: #6A762A;
+}
+
+.card-header p {
+  color: #5d6e49;
+  margin-bottom: 1rem;
+  max-width: 90%;
+  font-style: italic;
+}
+
+.card-content {
+  padding: 0.75rem 1.75rem 1.75rem 1.75rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .card-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .card-content {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Enhanced Button Styling */
+.tool-button {
+  width: 100%;
+  padding: 1.5rem 1rem;
+  background: linear-gradient(to right, #5d6e49, #7A8834);
+  color: white;
+  border-radius: 0.5rem;
+  border: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.tool-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0));
+  transform: skewX(-25deg);
+  transition: all 0.75s ease;
+}
+
+.tool-button:hover {
+  background: linear-gradient(to right, #28331a, #4A5D32);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+.tool-button:hover::before {
+  left: 100%;
+}
+
+.tool-button .icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.tool-button:hover .icon {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1);
+}
+
+.tool-button span {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-size: 1.1rem;
+}
+
+/* Custom button colors for different tools */
+.tool-button:nth-child(1) {
+  background: linear-gradient(to right, #5d6e49, #6A762A);
+}
+
+.tool-button:nth-child(2) {
+  background: linear-gradient(to right, #6A762A, #7A8834);
+}
+
+.tool-button:nth-child(3) {
+  background: linear-gradient(to right, #4A5D32, #5d6e49);
+}
+
+.tool-button:nth-child(4) {
+  background: linear-gradient(to right, #28331a, #4A5D32);
+}
+
+.tool-button:hover {
+  background: linear-gradient(to right, #28331a, #4A5D32);
+}
