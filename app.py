@@ -18,8 +18,10 @@ def create_app():
     def register_blueprints():
         from test import bp2
         from test2 import bp1
+        from t import bp3
         app.register_blueprint(bp1, url_prefix='/')
         app.register_blueprint(bp2, url_prefix='/')
+        app.register_blueprint(bp3, url_prefix='/')
     
     register_blueprints()
     

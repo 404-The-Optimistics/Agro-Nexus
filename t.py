@@ -1,12 +1,12 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Blueprint
 import google.generativeai as genai
 import logging
 from datetime import datetime
 import requests
 import serial
 
+bp3 = Blueprint('bp3', __name__)
 
-app = Flask(__name__)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -20,7 +20,7 @@ genai.configure(api_key=GEMINI_API_KEY)
 WEATHER_API_KEY = "5c4e1379ec8847fea4e101640251704"  # Your WeatherAPI.com key
 WEATHER_API_BASE_URL = "http://api.weatherapi.com/v1/current.json"
 
-@app.route('/real-time-data')
+@bp3.route('/real-time-data')
 def get_real_time_data():
     try:
         latitude = request.args.get('latitude')
@@ -101,11 +101,11 @@ def read_serial():
             print("Serial read error:", e)
 
 threading.Thread(target=read_serial, daemon=True).start()
-@app.route('/irrigation')
+@bp3.route('/irrigation')
 def irrigation():
     return render_template('simple_irrigation.html', moisture_data=moisture_data)
 
-@app.route('/predict', methods=['POST'])
+@bp3.route('/predict', methods=['POST'])
 def predict_irrigation():
     try:
         # Collect data from form
