@@ -8,87 +8,245 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/crop_recom.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+    <style>
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #1a472a, #2d5a3f);
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            margin-right: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .language-toggle {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+            z-index: 1001;
+        }
+
+        .language-toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 90px;
+            height: 34px;
+        }
+
+        .language-toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .language-toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2196F3;
+            transition: .4s;
+            border-radius: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+        }
+
+        .language-toggle-text {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1;
+            user-select: none;
+        }
+
+        .language-toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .language-toggle-slider {
+            background-color: #4CAF50;
+        }
+
+        input:checked + .language-toggle-slider:before {
+            transform: translateX(56px);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+                height: auto;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                margin: 1rem 0;
+                width: 100%;
+            }
+
+            .language-toggle {
+                margin: 1rem 0;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="navbar">
         <a href="#" class="logo">AgroNexus</a>
         <div class="nav-links">
-          <a href="/predict_price">Crop Price Predictor</a>
-          <a href="/crop_rec">Crop Recommendation</a>
-          <a href="/submit">Disease Detection</a>
-          <a href="/height">Height Tracker</a>
-          <a href="/simple_irrigation">Irrigation Predictor</a>
-          <a href="/problems_solved">Problems Solved</a>
+            <a href="/predict_price" data-lang-en="Crop Price Predictor" data-lang-hi="फसल मूल्य भविष्यवाणी">Crop Price Predictor</a>
+            <a href="/crop_rec" data-lang-en="Crop Recommendation" data-lang-hi="फसल अनुशंसा">Crop Recommendation</a>
+            <a href="/submit" data-lang-en="Disease Detection" data-lang-hi="रोग पहचान">Disease Detection</a>
+            <a href="/height" data-lang-en="Height Tracker" data-lang-hi="ऊंचाई ट्रैकर">Height Tracker</a>
+            <a href="/simple_irrigation" data-lang-en="Irrigation Predictor" data-lang-hi="सिंचाई भविष्यवाणी">Irrigation Predictor</a>
+            <a href="/problems_solved" data-lang-en="Problems Solved" data-lang-hi="समाधान किए गए">Problems Solved</a>
         </div>
-      </div>
+        <div class="language-toggle">
+            <label class="language-toggle-switch">
+                <input type="checkbox" id="langToggle">
+                <span class="language-toggle-slider">
+                    <span class="language-toggle-text" style="margin-left: 4px;">ENG</span>
+                    <span class="language-toggle-text" style="margin-right: 4px;">हिंदी</span>
+                </span>
+            </label>
+        </div>
+    </div>
     <div class="container">
         <header>
-            <h1>Agro Nexus Crop Recommendation</h1>
-            <p>Get personalized crop recommendations based on soil and weather parameters</p>
+            <h1 data-lang-en="Agro Nexus Crop Recommendation" data-lang-hi="एग्रो नेक्सस फसल अनुशंसा">Agro Nexus Crop Recommendation</h1>
+            <p data-lang-en="Get personalized crop recommendations based on soil and weather parameters" data-lang-hi="मिट्टी और मौसम के मापदंडों के आधार पर व्यक्तिगत फसल की सिफारिशें प्राप्त करें">Get personalized crop recommendations based on soil and weather parameters</p>
         </header>
 
         <main>
             <form id="recommendationForm" action="/crop_rec" method="POST">
-                <h2 class="section-title">Soil Parameters</h2>
+                <h2 class="section-title" data-lang-en="Soil Parameters" data-lang-hi="मिट्टी के मापदंड">Soil Parameters</h2>
                 <div class="input-row">
                     <div class="form-group">
-                        <label for="nitrogen">Nitrogen (N) (kg/ha)</label>
+                        <label for="nitrogen" data-lang-en="Nitrogen (N) (kg/ha)" data-lang-hi="नाइट्रोजन (N) (किग्रा/हेक्टेयर)">Nitrogen (N) (kg/ha)</label>
                         <input type="number" id="nitrogen" name="nitrogen" min="0" step="1" placeholder="Enter value" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="phosphorus">Phosphorus (P) (kg/ha)</label>
+                        <label for="phosphorus" data-lang-en="Phosphorus (P) (kg/ha)" data-lang-hi="फास्फोरस (P) (किग्रा/हेक्टेयर)">Phosphorus (P) (kg/ha)</label>
                         <input type="number" id="phosphorus" name="phosphorus" min="0" step="1" placeholder="Enter value" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="potassium">Potassium (K) (kg/ha)</label>
+                        <label for="potassium" data-lang-en="Potassium (K) (kg/ha)" data-lang-hi="पोटैशियम (K) (किग्रा/हेक्टेयर)">Potassium (K) (kg/ha)</label>
                         <input type="number" id="potassium" name="potassium" min="0" step="1" placeholder="Enter value" required>
                     </div>
                 </div>
 
-                <h2 class="section-title">Weather Parameters</h2>
+                <h2 class="section-title" data-lang-en="Weather Parameters" data-lang-hi="मौसम के मापदंड">Weather Parameters</h2>
                 <div class="input-row">
                     <div class="form-group">
-                        <label for="temperature">Temperature (°C)</label>
+                        <label for="temperature" data-lang-en="Temperature (°C)" data-lang-hi="तापमान (°C)">Temperature (°C)</label>
                         <input type="number" id="temperature" name="temperature" min="-50" max="60" step="0.1" placeholder="Enter value" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="humidity">Humidity (%)</label>
+                        <label for="humidity" data-lang-en="Humidity (%)" data-lang-hi="आर्द्रता (%)">Humidity (%)</label>
                         <input type="number" id="humidity" name="humidity" min="0" max="100" step="0.1" placeholder="Enter value" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="rainfall">Rainfall (mm)</label>
+                        <label for="rainfall" data-lang-en="Rainfall (mm)" data-lang-hi="वर्षा (मिमी)">Rainfall (mm)</label>
                         <input type="number" id="rainfall" name="rainfall" min="0" step="0.1" placeholder="Enter value" required>
                     </div>
                 </div>
 
-                <h2 class="section-title">Soil pH</h2>
+                <h2 class="section-title" data-lang-en="Soil pH" data-lang-hi="मिट्टी का पीएच">Soil pH</h2>
                 <div class="input-row">
                     <div class="form-group full-width">
-                        <label for="ph">pH Level (Acidity/Alkalinity)</label>
+                        <label for="ph" data-lang-en="pH Level (Acidity/Alkalinity)" data-lang-hi="पीएच स्तर (अम्लीयता/क्षारीयता)">pH Level (Acidity/Alkalinity)</label>
                         <div class="ph-container">
                             <input type="range" id="ph" name="ph" min="0" max="14" step="0.1" value="7" required>
                             <div class="ph-value">7.0</div>
                             <div class="ph-scale">
-                                <span>Acidic</span>
-                                <span>Neutral</span>
-                                <span>Alkaline</span>
+                                <span data-lang-en="Acidic" data-lang-hi="अम्लीय">Acidic</span>
+                                <span data-lang-en="Neutral" data-lang-hi="तटस्थ">Neutral</span>
+                                <span data-lang-en="Alkaline" data-lang-hi="क्षारीय">Alkaline</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="recommend-btn">Get Recommendation</button>
+                <button type="submit" class="recommend-btn" data-lang-en="Get Recommendation" data-lang-hi="अनुशंसा प्राप्त करें">Get Recommendation</button>
             </form>
 
             <div id="result" class="result-container">
-                <h2>Recommended Crop :  {{crop}}</h2>
+                <h2 data-lang-en="Recommended Crop : " data-lang-hi="अनुशंसित फसल : ">Recommended Crop : {{crop}}</h2>
             </div>
         </main>
     </div>
-    <!-- <script src="{{ url_for('static', filename='scripts/crop_recom.js') }}"></script> -->
+    <script>
+        // Language toggle functionality
+        document.getElementById('langToggle').addEventListener('change', function() {
+            const isHindi = this.checked;
+            const elements = document.querySelectorAll('[data-lang-en]');
+            
+            elements.forEach(element => {
+                const text = isHindi ? element.getAttribute('data-lang-hi') : element.getAttribute('data-lang-en');
+                if (element.tagName.toLowerCase() === 'input' && element.type === 'text') {
+                    element.placeholder = text;
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Update input placeholders
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.placeholder = isHindi ? 'मान दर्ज करें' : 'Enter value';
+            });
+
+            // Save language preference
+            localStorage.setItem('language', isHindi ? 'hi' : 'en');
+        });
+
+        // Load saved language preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLanguage = localStorage.getItem('language');
+            if (savedLanguage === 'hi') {
+                document.getElementById('langToggle').click();
+            }
+        });
+    </script>
 </body>
 </html> 

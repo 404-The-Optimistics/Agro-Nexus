@@ -5,76 +5,302 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agro Nexus - Price Prediction</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/price.css') }}">
+    <style>
+        .navbar {
+            background: linear-gradient(to right, #2D3A24, #1A2212);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 28px;
+            height: 90px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+            width: 100%;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(138, 154, 91, 0.2);
+        }
+
+        .navbar .logo {
+            font-size: 30px;
+            font-weight: bold;
+            color: #8A9A5B;
+            text-decoration: none;
+            margin-left: 40px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .navbar .logo:hover {
+            color: #E0E6D4;
+            transform: scale(1.02);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #E0E6D4;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            position: relative;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links a:hover {
+            color: #8A9A5B;
+            background-color: rgba(0, 0, 0, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: #8A9A5B;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after {
+            width: 60%;
+        }
+
+        .language-toggle {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        .language-toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 90px;
+            height: 34px;
+        }
+
+        .language-toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .language-toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.25);
+            transition: .4s;
+            border-radius: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+            border: 1px solid rgba(138, 154, 91, 0.3);
+        }
+
+        .language-toggle-text {
+            color: #E0E6D4;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1;
+            user-select: none;
+        }
+
+        .language-toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 3px;
+            background-color: #8A9A5B;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .language-toggle-slider {
+            background-color: rgba(0, 0, 0, 0.25);
+        }
+
+        input:checked + .language-toggle-slider:before {
+            transform: translateX(56px);
+            background-color: #8A9A5B;
+        }
+
+        @media (max-width: 900px) {
+            .navbar {
+                padding: 0 20px;
+            }
+            .navbar .logo {
+                margin-left: 20px;
+                font-size: 26px;
+            }
+            .nav-links {
+                gap: 15px;
+            }
+            .nav-links a {
+                font-size: 16px;
+                padding: 6px 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+                padding: 15px;
+            }
+            .navbar .logo {
+                margin: 10px 0;
+            }
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+                margin: 10px 0;
+                width: 100%;
+                gap: 10px;
+            }
+            .language-toggle {
+                margin: 10px 0;
+            }
+        }
+
+        body {
+            padding-top: 90px;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #1E2A22, #111A14);
+        }
+    </style>
 </head>
 <body>
-  <div class="navbar">
-    <a href="/home" class="logo">AgroNexus</a>
-    <div class="nav-links">
-      <a href="/predict_price">Crop Price Predictor</a>
-      <a href="/crop_rec">Crop Recommendation</a>
-      <a href="/submit">Disease Detection</a>
-      <a href="/height">Height Tracker</a>
-      <a href="/simple_irrigation">Irrigation Predictor</a>
-      <a href="/problems_solved">Problems Solved</a>
+    <div class="navbar">
+        <a href="/home" class="logo">AgroNexus</a>
+        <div class="nav-links">
+            <a href="/predict_price" data-lang-en="Crop Price Predictor" data-lang-hi="फसल मूल्य भविष्यवाणी">Crop Price Predictor</a>
+            <a href="/crop_rec" data-lang-en="Crop Recommendation" data-lang-hi="फसल अनुशंसा">Crop Recommendation</a>
+            <a href="/submit" data-lang-en="Disease Detection" data-lang-hi="रोग पहचान">Disease Detection</a>
+            <a href="/height" data-lang-en="Height Tracker" data-lang-hi="ऊंचाई ट्रैकर">Height Tracker</a>
+            <a href="/simple_irrigation" data-lang-en="Irrigation Predictor" data-lang-hi="सिंचाई भविष्यवाणी">Irrigation Predictor</a>
+            <a href="/problems_solved" data-lang-en="Problems Solved" data-lang-hi="समाधान किए गए">Problems Solved</a>
+        </div>
+        <div class="language-toggle">
+            <label class="language-toggle-switch">
+                <input type="checkbox" id="langToggle">
+                <span class="language-toggle-slider">
+                    <span class="language-toggle-text" style="margin-left: 4px;">ENG</span>
+                    <span class="language-toggle-text" style="margin-right: 4px;">हिंदी</span>
+                </span>
+            </label>
+        </div>
     </div>
-  </div>
     
     <div class="container">
         <header>
-            <h1>AgroNexus Price Prediction</h1>
-            <p>Predict crop prices based on various factors</p>
+            <h1 data-lang-en="AgroNexus Price Prediction" data-lang-hi="एग्रो नेक्सस मूल्य भविष्यवाणी">AgroNexus Price Prediction</h1>
+            <p data-lang-en="Predict crop prices based on various factors" data-lang-hi="विभिन्न कारकों के आधार पर फसल के मूल्य की भविष्यवाणी करें">Predict crop prices based on various factors</p>
         </header>
 
         <main>
             <form id="predictionForm" action="/predict_price" method="POST">
                 <div class="form-group">
-                    <label for="crop">Select Crop</label>
+                    <label for="crop" data-lang-en="Select Crop" data-lang-hi="फसल चुनें">Select Crop</label>
                     <select id="crop" name="crop" required>
-                        <option value="">Select a crop</option>
-                        <option value="Wheat">Wheat</option>
-                        <option value="Cotton">Cotton</option>
-                        <option value="Maize">Maize</option>
-                        <option value="Jute">Jute</option>
-                        <option value="Gram">Gram</option>
-                        <option value="Moong">Moong</option>
+                        <option value="" data-lang-en="Select a crop" data-lang-hi="एक फसल चुनें">Select a crop</option>
+                        <option value="Wheat" data-lang-en="Wheat" data-lang-hi="गेहूं">Wheat</option>
+                        <option value="Cotton" data-lang-en="Cotton" data-lang-hi="कपास">Cotton</option>
+                        <option value="Maize" data-lang-en="Maize" data-lang-hi="मक्का">Maize</option>
+                        <option value="Jute" data-lang-en="Jute" data-lang-hi="जूट">Jute</option>
+                        <option value="Gram" data-lang-en="Gram" data-lang-hi="चना">Gram</option>
+                        <option value="Moong" data-lang-en="Moong" data-lang-hi="मूंग">Moong</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="date">Date</label>
+                    <label for="date" data-lang-en="Date" data-lang-hi="दिनांक">Date</label>
                     <input type="date" id="date" name="date" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="rainfall">Rainfall (mm)</label>
+                    <label for="rainfall" data-lang-en="Rainfall (mm)" data-lang-hi="वर्षा (मिमी)">Rainfall (mm)</label>
                     <input type="number" id="rainfall" name="rainfall" min="0" step="0.1" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="city">City</label>
+                    <label for="city" data-lang-en="City" data-lang-hi="शहर">City</label>
                     <select id="city" name="city" required>
-                        <option value="">Select a city</option>
-                        <option value="mumbai">Mumbai</option>
-                        <option value="delhi">Delhi</option>
-                        <option value="bangalore">Bangalore</option>
-                        <option value="hyderabad">Hyderabad</option>
-                        <option value="chennai">Chennai</option>
+                        <option value="" data-lang-en="Select a city" data-lang-hi="एक शहर चुनें">Select a city</option>
+                        <option value="mumbai" data-lang-en="Mumbai" data-lang-hi="मुंबई">Mumbai</option>
+                        <option value="delhi" data-lang-en="Delhi" data-lang-hi="दिल्ली">Delhi</option>
+                        <option value="bangalore" data-lang-en="Bangalore" data-lang-hi="बैंगलोर">Bangalore</option>
+                        <option value="hyderabad" data-lang-en="Hyderabad" data-lang-hi="हैदराबाद">Hyderabad</option>
+                        <option value="chennai" data-lang-en="Chennai" data-lang-hi="चेन्नई">Chennai</option>
                     </select>
                 </div>
 
-                <button type="submit" class="predict-btn">Predict Price</button>
+                <button type="submit" class="predict-btn" data-lang-en="Predict Price" data-lang-hi="मूल्य की भविष्यवाणी करें">Predict Price</button>
             </form>
 
             <div id="result" class="result-container">
-                <h2>Predicted Price</h2>
+                <h2 data-lang-en="Predicted Price" data-lang-hi="अनुमानित मूल्य">Predicted Price</h2>
                 <div class="price-display">
                     <span id="predictedPrice">{{ price | int }}</span>
-                    <span class="unit">WPI</span>
+                    <span class="unit" data-lang-en="WPI" data-lang-hi="डब्ल्यूपीआई">WPI</span>
                 </div>
             </div>
         </main>
     </div>
-    <!-- <script src="{{ url_for('static', filename='scripts/price.js') }}"></script> -->
 
+    <script>
+        // Language toggle functionality
+        document.getElementById('langToggle').addEventListener('change', function() {
+            const isHindi = this.checked;
+            const elements = document.querySelectorAll('[data-lang-en]');
+            
+            elements.forEach(element => {
+                const text = isHindi ? element.getAttribute('data-lang-hi') : element.getAttribute('data-lang-en');
+                if (element.tagName.toLowerCase() === 'option') {
+                    element.text = text;
+                } else if (element.tagName.toLowerCase() === 'input' && element.type === 'text') {
+                    element.placeholder = text;
+                } else {
+                    element.textContent = text;
+                }
+            });
+
+            // Update input placeholders
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.placeholder = isHindi ? 'मान दर्ज करें' : 'Enter value';
+            });
+
+            // Save language preference
+            localStorage.setItem('language', isHindi ? 'hi' : 'en');
+        });
+
+        // Load saved language preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLanguage = localStorage.getItem('language');
+            if (savedLanguage === 'hi') {
+                document.getElementById('langToggle').click();
+            }
+        });
+    </script>
 </body>
 </html> 
